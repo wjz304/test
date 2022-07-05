@@ -60,7 +60,7 @@ jobs:
           git clone https://gitee.com/btwise/OpenCore_NO_ACPI.git OpenCore_NO_ACPI
           cd ./OpenCore_NO_ACPI
           
-          sudo sed -i "s|mOpenCoreVersionReady;|mOpenCoreVersionReady = FALSE;|g" ./Library/OcMainLib/OpenCoreMisc.c
+          sudo sed -i'.bak' "s|mOpenCoreVersionReady;|mOpenCoreVersionReady = FALSE;|g" ./Library/OcMainLib/OpenCoreMisc.c
 
           src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
 
