@@ -91,6 +91,21 @@ index 92299dfe..bac681be 100644
  			<key>EnableSafeModeSlide</key>
  			<true/>
  			<key>EnableWriteUnprotector</key>
+diff --git a/Include/Acidanthera/Library/OcBootManagementLib.h b/Include/Acidanthera/Library/OcBootManagementLib.h
+index c50bb136..4a6c6688 100644
+--- a/Include/Acidanthera/Library/OcBootManagementLib.h
++++ b/Include/Acidanthera/Library/OcBootManagementLib.h
+@@ -901,6 +901,10 @@ struct OC_PICKER_CONTEXT_ {
+   //
+   // Additional suffix to include by the interface.
+   //
++  CONST CHAR8                 *buildSuffix;
++  //
++  // Additional suffix to include by the interface.
++  //
+   CONST CHAR8                 *TitleSuffix;
+   //
+   // Used picker mode.
 diff --git a/Include/Acidanthera/Library/OcConfigurationLib.h b/Include/Acidanthera/Library/OcConfigurationLib.h
 index 752e3ef5..920297dd 100644
 --- a/Include/Acidanthera/Library/OcConfigurationLib.h
@@ -132,18 +147,9 @@ index a6203013..f6228c4d 100644
    OC_SCHEMA_BOOLEAN_IN ("EnableWriteUnprotector", OC_GLOBAL_CONFIG, Booter.Quirks.EnableWriteUnprotector),
    OC_SCHEMA_BOOLEAN_IN ("ForceBooterSignature",   OC_GLOBAL_CONFIG, Booter.Quirks.ForceBooterSignature),
 diff --git a/Library/OcMainLib/OpenCoreMisc.c b/Library/OcMainLib/OpenCoreMisc.c
-index 96d59675..403bc26b 100644
+index 96d59675..94d56df9 100644
 --- a/Library/OcMainLib/OpenCoreMisc.c
 +++ b/Library/OcMainLib/OpenCoreMisc.c
-@@ -331,7 +331,7 @@ SavePanicLog (
-     DEBUG ((DEBUG_INFO, "OC: Panic log does not exist\n"));
-   }
- }
--
-+STATIC CHAR8 OcBuildInfoString[] = { "OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX" };
- CONST CHAR8 *
- OcMiscGetVersionString (
-   VOID
 @@ -360,6 +360,7 @@ OcMiscGetVersionString (
      /* [12]:[8]   = */ "YYYY-"
      /* [15]:[13]  = */ "MM-"
@@ -152,15 +158,14 @@ index 96d59675..403bc26b 100644
    };
  
    STATIC BOOLEAN  mOpenCoreVersionReady;
-@@ -395,7 +396,7 @@ OcMiscGetVersionString (
+@@ -919,6 +920,7 @@ OcMiscBoot (
+   Context->PickerVariant        = AsciiPickerVariant;
+   Context->BlacklistAppleUpdate = Config->Misc.Security.BlacklistAppleUpdate;
  
-     mOpenCoreVersionReady = TRUE;
++  Context->buildSuffix          = "OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX";
+   if ((Config->Misc.Security.ExposeSensitiveData & OCS_EXPOSE_VERSION_UI) != 0) {
+     Context->TitleSuffix = OcMiscGetVersionString ();
    }
--
-+  DEBUG ((DEBUG_INFO, OcBuildInfoString));
-   return mOpenCoreVersion;
- }
- 
 diff --git a/build_oc.tool b/build_oc.tool
 index 6767d44b..95b5537b 100755
 --- a/build_oc.tool
