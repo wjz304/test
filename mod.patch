@@ -92,20 +92,20 @@ index 92299dfe..bac681be 100644
  			<true/>
  			<key>EnableWriteUnprotector</key>
 diff --git a/Include/Acidanthera/Library/OcBootManagementLib.h b/Include/Acidanthera/Library/OcBootManagementLib.h
-index c50bb136..4a6c6688 100644
+index c50bb136..7f530956 100644
 --- a/Include/Acidanthera/Library/OcBootManagementLib.h
 +++ b/Include/Acidanthera/Library/OcBootManagementLib.h
-@@ -901,6 +901,10 @@ struct OC_PICKER_CONTEXT_ {
+@@ -899,6 +899,10 @@ struct OC_PICKER_CONTEXT_ {
    //
-   // Additional suffix to include by the interface.
+   OC_PRIVILEGE_CONTEXT        *PrivilegeContext;
    //
++  // Additional suffix to build info.
++  //
 +  CONST CHAR8                 *buildSuffix;
 +  //
-+  // Additional suffix to include by the interface.
-+  //
-   CONST CHAR8                 *TitleSuffix;
+   // Additional suffix to include by the interface.
    //
-   // Used picker mode.
+   CONST CHAR8                 *TitleSuffix;
 diff --git a/Include/Acidanthera/Library/OcConfigurationLib.h b/Include/Acidanthera/Library/OcConfigurationLib.h
 index 752e3ef5..920297dd 100644
 --- a/Include/Acidanthera/Library/OcConfigurationLib.h
