@@ -132,9 +132,18 @@ index a6203013..f6228c4d 100644
    OC_SCHEMA_BOOLEAN_IN ("EnableWriteUnprotector", OC_GLOBAL_CONFIG, Booter.Quirks.EnableWriteUnprotector),
    OC_SCHEMA_BOOLEAN_IN ("ForceBooterSignature",   OC_GLOBAL_CONFIG, Booter.Quirks.ForceBooterSignature),
 diff --git a/Library/OcMainLib/OpenCoreMisc.c b/Library/OcMainLib/OpenCoreMisc.c
-index 96d59675..dfa0ce84 100644
+index 96d59675..5091851e 100644
 --- a/Library/OcMainLib/OpenCoreMisc.c
 +++ b/Library/OcMainLib/OpenCoreMisc.c
+@@ -331,7 +331,7 @@ SavePanicLog (
+     DEBUG ((DEBUG_INFO, "OC: Panic log does not exist\n"));
+   }
+ }
+-
++STATIC CHAR8 * OcBuildInfoString[] = { "OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX" }
+ CONST CHAR8 *
+ OcMiscGetVersionString (
+   VOID
 @@ -360,6 +360,7 @@ OcMiscGetVersionString (
      /* [12]:[8]   = */ "YYYY-"
      /* [15]:[13]  = */ "MM-"

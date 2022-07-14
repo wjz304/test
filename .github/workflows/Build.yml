@@ -50,34 +50,30 @@ jobs:
           git clone https://github.com/acidanthera/OpenCorePkg.git OpenCore_Mod
           cd ./OpenCore_Mod
           
-          if git apply --check $GITHUB_WORKSPACE/mod.patch; then
+          src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
 
-            git apply $GITHUB_WORKSPACE/mod.patch
+          # jq parses json, # token https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps  
+          latesttag=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -sL https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest | jq -r .tag_name)
 
-            src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
+          currenttag=$(grep OPEN_CORE_VERSION Include/Acidanthera/Library/OcMainLib.h | sed 's/.*"\(.*\)".*/\1/' | grep -E '^[0-9.]+$')_$(git rev-parse --short HEAD)
+          
+          echo latesttag: $latesttag
+          echo currenttag: $currenttag
 
-            # jq parses json, # token https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps  
-            latesttag=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -sL https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest | jq -r .tag_name)
-
-            currenttag=$(grep OPEN_CORE_VERSION Include/Acidanthera/Library/OcMainLib.h | sed 's/.*"\(.*\)".*/\1/' | grep -E '^[0-9.]+$')_$(git rev-parse --short HEAD)
-            
-            echo latesttag: $latesttag
-            echo currenttag: $currenttag
-
-            if [ "${latesttag}" == "${currenttag}" ]; then
-                echo "isNew=false" >> $GITHUB_ENV
-            else
-                echo "isNew=true" >> $GITHUB_ENV
-            fi
-
-            echo "currenttag=${currenttag}" >> $GITHUB_ENV
-            echo "gitrevhead=$(git rev-parse HEAD)" >> $GITHUB_ENV
-            echo ${{ env.currenttag }}
-            echo ${{ env.gitrevhead }}
+          if [ "${latesttag}" == "${currenttag}" ]; then
+              echo "isNew=false" >> $GITHUB_ENV
           else
-            echo "error"
-            echo "isNew=false" >> $GITHUB_ENV
-          fi
+            if git apply --check $GITHUB_WORKSPACE/mod.patch; then
+              git apply $GITHUB_WORKSPACE/mod.patch
+              sed -i'.bak' "s/OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX/OpenCore-Mod-$(git rev-parse --short HEAD)-$(date +"%Y-%m-%d")-304403268/" ./Library/OcMainLib/OpenCoreMisc.c
+              echo "isNew=true" >> $GITHUB_ENV
+              echo "currenttag=${currenttag}" >> $GITHUB_ENV
+              echo "gitrevhead=$(git rev-parse HEAD)" >> $GITHUB_ENV
+            else
+              echo "error"
+              echo "isNew=false" >> $GITHUB_ENV
+            fi
+          Fi
 
       - name: build Duet
         if: env.isNew == 'true'
