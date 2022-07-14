@@ -65,7 +65,10 @@ jobs:
           else
             if git apply --check $GITHUB_WORKSPACE/mod.patch; then
               git apply $GITHUB_WORKSPACE/mod.patch
-              sed -i'.bak' "s/OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX/OpenCore-Mod-$(git rev-parse --short HEAD)-$(date +"%Y-%m-%d")-304403268/" ./Library/OcMainLib/OpenCoreMisc.c
+              curhead=$(git rev-parse --short HEAD)
+              curdate=$(date +"%Y-%m-%d")
+              curuser=304403268
+              sed -i'.bak' "s/OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX/OpenCore-Mod-${curhead}-${curdate}-${curuser}/" ./Library/OcMainLib/OpenCoreMisc.c
               echo "isNew=true" >> $GITHUB_ENV
               echo "currenttag=${currenttag}" >> $GITHUB_ENV
               echo "gitrevhead=$(git rev-parse HEAD)" >> $GITHUB_ENV
