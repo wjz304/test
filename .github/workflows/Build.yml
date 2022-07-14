@@ -61,7 +61,7 @@ jobs:
           echo currenttag: $currenttag
 
           if [ "${latesttag}" == "${currenttag}" ]; then
-              echo "isNew=false" >> $GITHUB_ENV
+            echo "isNew=false" >> $GITHUB_ENV
           else
             if git apply --check $GITHUB_WORKSPACE/mod.patch; then
               git apply $GITHUB_WORKSPACE/mod.patch
@@ -76,7 +76,7 @@ jobs:
               echo "error"
               echo "isNew=false" >> $GITHUB_ENV
             fi
-          Fi
+          fi
 
       - name: build Duet
         if: env.isNew == 'true'
