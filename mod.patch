@@ -147,9 +147,18 @@ index a6203013..f6228c4d 100644
    OC_SCHEMA_BOOLEAN_IN ("EnableWriteUnprotector", OC_GLOBAL_CONFIG, Booter.Quirks.EnableWriteUnprotector),
    OC_SCHEMA_BOOLEAN_IN ("ForceBooterSignature",   OC_GLOBAL_CONFIG, Booter.Quirks.ForceBooterSignature),
 diff --git a/Library/OcMainLib/OpenCoreMisc.c b/Library/OcMainLib/OpenCoreMisc.c
-index 96d59675..94d56df9 100644
+index 96d59675..8e26e532 100644
 --- a/Library/OcMainLib/OpenCoreMisc.c
 +++ b/Library/OcMainLib/OpenCoreMisc.c
+@@ -331,7 +331,7 @@ SavePanicLog (
+     DEBUG ((DEBUG_INFO, "OC: Panic log does not exist\n"));
+   }
+ }
+-
++STATIC CHAR8 buildString[] = {"OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX"};
+ CONST CHAR8 *
+ OcMiscGetVersionString (
+   VOID
 @@ -360,6 +360,7 @@ OcMiscGetVersionString (
      /* [12]:[8]   = */ "YYYY-"
      /* [15]:[13]  = */ "MM-"
@@ -162,10 +171,23 @@ index 96d59675..94d56df9 100644
    Context->PickerVariant        = AsciiPickerVariant;
    Context->BlacklistAppleUpdate = Config->Misc.Security.BlacklistAppleUpdate;
  
-+  Context->buildSuffix          = "OpenCore-Mod-XXXXXXXX-XXXX-XX-XX-XXXXXXXXXX";
++  Context->buildSuffix          = buildString;
    if ((Config->Misc.Security.ExposeSensitiveData & OCS_EXPOSE_VERSION_UI) != 0) {
      Context->TitleSuffix = OcMiscGetVersionString ();
    }
+diff --git a/Platform/OpenCanopy/Views/BootPicker.c b/Platform/OpenCanopy/Views/BootPicker.c
+index 7661647d..a5469c61 100644
+--- a/Platform/OpenCanopy/Views/BootPicker.c
++++ b/Platform/OpenCanopy/Views/BootPicker.c
+@@ -1948,7 +1948,7 @@ BootPickerViewInitialize (
+   }
+ 
+   mBootPicker.Hdr.Obj.NumChildren = NumBootEntries;
+-
++  if (GuiContext->PickerContext->buildSuffix != NULL) {FreePool(AsciiStrCopyToUnicode(GuiContext->PickerContext->buildSuffix, AsciiStrLen(GuiContext->PickerContext->buildSuffix)));}
+   if (GuiContext->PickerContext->TitleSuffix == NULL) {
+     mVersionLabelImage.Buffer = NULL;
+ 
 diff --git a/build_oc.tool b/build_oc.tool
 index 6767d44b..95b5537b 100755
 --- a/build_oc.tool
