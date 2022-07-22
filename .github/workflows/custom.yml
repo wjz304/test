@@ -290,7 +290,6 @@ jobs:
 
       - name: config
         uses: jannekem/run-python-script-action@v1.2
-        id: info
         with:
           script: |
             import os, json
