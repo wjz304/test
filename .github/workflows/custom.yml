@@ -107,7 +107,11 @@ jobs:
           sudo timedatectl set-timezone "Asia/Shanghai"
 
           if '${{ github.event_name }}' == 'issues':
-              echo "${{ github.event.issue.body }}" > issuebody.txt
+              (
+                cat <<EOF
+                ${{ github.event.issue.body }}
+                EOF
+              ) > issuebody.txt
 
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
