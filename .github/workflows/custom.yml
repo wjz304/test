@@ -349,6 +349,8 @@ jobs:
                     config["extra_cmdline"]["mac1"] = dat[0].strip().replace(':', '')
                     config["extra_cmdline"]["mac2"] = hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0')
                         
+                print(config)
+
                 with open('user_config.json', 'w') as f:
                     json.dump(config, f)
                   
@@ -380,7 +382,8 @@ jobs:
             exts=(${ext//,/ })
             for item in ${exts[@]}
             do
-              ./ext-manager.sh add 'https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json'
+              echo add ${item} ...
+              ./ext-manager.sh add "https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json"
             done
           fi
 
