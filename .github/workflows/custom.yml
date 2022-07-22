@@ -114,7 +114,7 @@ jobs:
         id: info
         with:
           script: |
-            import os, json, string
+            import os, re, json, string
 
             if __name__ == '__main__':
                 
