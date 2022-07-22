@@ -115,6 +115,9 @@ jobs:
 
             if __name__ == '__main__':
 
+                issues = 'false'
+                iscustom = 'true'
+
                 platform = 'DS918+'
                 version = '7.1.0-42661'
                 sataportmap = ''
@@ -129,12 +132,13 @@ jobs:
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ github.event.issue.title }}'.lower().startswith('custom'):
                         issues = 'true'
+
                         body = {}
                         body = json.loads('${{ github.event.issue.body }}')
                         
                         if len(body) == 0:
                             iscustom = 'false'
-                            
+
                         if 'platform' in body:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                                 platform = body['platform']
@@ -207,12 +211,8 @@ jobs:
                                 jun = body['jun']
                             else:
                                 iscustom = 'false'
-                    else:
-                        issues = 'false'
 
                 else:
-                    issues = 'false'
-                    iscustom = 'true'
                     platform = '${{ inputs.platform }}'
                     version = '${{ inputs.version }}'
                     sataportmap = '${{ inputs.sataportmap }}'
