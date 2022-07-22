@@ -315,14 +315,14 @@ jobs:
                 }
 
                 if '${{ steps.info.outputs.sataportmap }}' != '':
-                    config["extra_cmdline"]["SataPortMap"] = '"${{ steps.info.outputs.sataportmap }}"'
+                    config["extra_cmdline"]["SataPortMap"] = '${{ steps.info.outputs.sataportmap }}'
                 if '${{ steps.info.outputs.diskidxmap }}' != '':
-                    config["extra_cmdline"]["DiskIdxMap"] = '"${{ steps.info.outputs.diskidxmap }}"'
+                    config["extra_cmdline"]["DiskIdxMap"] = '${{ steps.info.outputs.diskidxmap }}'
                   
                 if '${{ steps.info.outputs.pid }}' != '':
-                  config["extra_cmdline"]["pid"] = '"${{ steps.info.outputs.pid }}"'
+                  config["extra_cmdline"]["pid"] = '${{ steps.info.outputs.pid }}'
                 if '${{ steps.info.outputs.vid }}' != '':
-                  config["extra_cmdline"]["vid"] = '"${{ steps.info.outputs.vid }}"'
+                  config["extra_cmdline"]["vid"] = '${{ steps.info.outputs.vid }}'
 
                 dat = []
                 if '${{ steps.info.outputs.sn }}' == '' or '${{ steps.info.outputs.mac }}' == '':
@@ -337,23 +337,23 @@ jobs:
                     dat = os.popen('bash ./serialnumbergen.sh ${{ steps.info.outputs.platform }}').readlines()
                 
                 if '${{ steps.info.outputs.sn }}' != '':
-                    config["extra_cmdline"]["sn"] = '"${{ steps.info.outputs.pid }}"'
+                    config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.pid }}'
                 elif len(dat) == 2:
-                    config["extra_cmdline"]["sn"] = '"' + dat[1].strip() + '"'
+                    config["extra_cmdline"]["sn"] = dat[1].strip()
 
                 if '${{ steps.info.outputs.mac }}' != '':
-                    for index, item in '${{ steps.info.outputs.mac }}'.split(','):
-                        config["extra_cmdline"]["mac{}".format(index+1)] = '"' + item + '"'
+                    for index, item in enumerate('${{ steps.info.outputs.mac }}'.split(',')):
+                        config["extra_cmdline"]["mac{}".format(index+1)] = item
                     config["extra_cmdline"]["netif_num"] = len('${{ steps.info.outputs.mac }}'.split(','))
                 elif len(dat) == 2:
-                    config["extra_cmdline"]["mac1"] = '"' + dat[0].strip().replace(':', '')  + '"'
-                    config["extra_cmdline"]["mac2"] = '"' + hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0').upper()  + '"'
+                    config["extra_cmdline"]["mac1"] = dat[0].strip().replace(':', '')
+                    config["extra_cmdline"]["mac2"] = hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0').upper()
                         
-                print(config)
+                print(json.dumps(config, indent=4))
 
-                with open('user_config.json', 'w') as f:
-                    json.dump(config, f)
-
+                with open('user_config.json', 'w', encoding="utf-8") as f:
+                    f.write(json.dumps(config, indent=4))
+                  
       - name: Run Build
         if: steps.info.outputs.iscustom == 'true'
         run: |
@@ -361,7 +361,6 @@ jobs:
           sudo apt-get install -y curl bspatch jq git
 
           git clone https://github.com/jumkey/redpill-load.git redpill-load
-          
           cp user_config.json redpill-load/user_config.json
           wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-4.4.180plus.tgz
           tar zxvf redpill-4.4.180plus.tgz -C ./
