@@ -106,6 +106,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
+          if '${{ github.event_name }}' == 'issues':
+              echo "${{ github.event.issue.body }}" > issuebody.txt
+
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
         id: info
@@ -118,8 +121,11 @@ jobs:
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ github.event.issue.title }}'.lower().startswith('custom'):
                         issues = 'true'
-
-                        body = json.loads('${{ github.event.issue.body }}')
+                        
+                        # body = json.loads('${{ github.event.issue.body }}')
+                        body = {}
+                        with open('issuebody.txt', 'r', encoding="utf-8") as f:
+                            body = json.load(f)
                         
                         if 'platform' in dict:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
