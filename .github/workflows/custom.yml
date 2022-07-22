@@ -193,14 +193,14 @@ jobs:
                             vid = ''
 
                         if 'ext' in dict:
-                            if os.path.exists('rp-exts-file'):
-                                os.remove('rp-exts-file')
-                            res = wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/exts', out='rp-exts-file')
-                            with open('rp-exts-file', mode="rb") as f:
-                                rp-exts = f.readlines()
-                            rp-exts = [x.strip() for x in rp-exts]
+                            if os.path.exists('rpExtsFile'):
+                                os.remove('rpExtsFile')
+                            res = wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/exts', out='rpExtsFile')
+                            with open('rpExtsFile', mode="rb") as f:
+                                rpExts = f.readlines()
+                            rpExts = [x.strip() for x in rpExts]
                             exts = [x.strip() for x in re.split(',| |\|',body['ext']) if x.strip()!='']
-                            if len(ext) > 0 and not set(exts) <= set(rp-exts):
+                            if len(ext) > 0 and not set(exts) <= set(rpExts):
                                 ext = ','.join(exts)
                             else:
                                 iscustom = 'false'
@@ -378,7 +378,8 @@ jobs:
             do
               ./ext-manager.sh add 'https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json'
             done
-
+          fi
+          
           sudo BRP_JUN_MOD=${{ steps.info.outputs.jun }} BRP_DEBUG=1 BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
 
       - name: Generate release tag
