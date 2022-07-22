@@ -127,7 +127,7 @@ jobs:
                         # with open('issuebody.txt', 'r', encoding="utf-8") as f:
                         #     body = json.load(f)
                         
-                        if 'platform' in dict:
+                        if 'platform' in body:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                                 platform = body['platform']
                             else:
@@ -135,7 +135,7 @@ jobs:
                         else:
                             platform = 'DS918+'
 
-                        if 'version' in dict:
+                        if 'version' in body:
                             if body['version'] in ['7.1.0-42661', '7.0.1-42218']:
                                 version = body['version']
                             else:
@@ -143,7 +143,7 @@ jobs:
                         else:
                             version = '7.1.0-42661'
                         
-                        if 'sataportmap' in dict:
+                        if 'sataportmap' in body:
                             if body['sataportmap'].isdigit():
                                 sataportmap = body['sataportmap']
                             else:
@@ -151,7 +151,7 @@ jobs:
                         else:
                             sataportmap = '1'
 
-                        if 'diskidxmap' in dict:
+                        if 'diskidxmap' in body:
                             if all(c in string.hexdigits for c in body['diskidxmap']) and len(body['diskidxmap']) == 2 * len(body['sataportmap']):
                                 diskidxmap = body['diskidxmap']
                             else:
@@ -159,7 +159,7 @@ jobs:
                         else:
                             diskidxmap = '10'
 
-                        if 'sn' in dict:
+                        if 'sn' in body:
                             if body['sn'].isalnum():
                                 sn = body['sn']
                             else:
@@ -167,7 +167,7 @@ jobs:
                         else:
                             sn = ''
                         
-                        if 'mac' in dict:
+                        if 'mac' in body:
                             macs = [x.strip() for x in re.split(',| |\|',body['mac']) if x.strip()!='']
                             if len(macs) <= 0 or len(macs) > 8:
                                 iscustom = 'false'
@@ -176,7 +176,7 @@ jobs:
                         else:
                             mac = ''
                         
-                        if 'pid' in dict:
+                        if 'pid' in body:
                             if len(body['pid']) == 6 and body['pid'].lower().startswith('0x') and all(c in string.hexdigits for c in body['pid'][2:]):
                                 pid = body['pid'].lower()
                             else:
@@ -184,7 +184,7 @@ jobs:
                         else:
                             pid = ''
                         
-                        if 'vid' in dict:
+                        if 'vid' in body:
                             if len(body['vid']) == 6 and body['vid'].lower().startswith('0x') and all(c in string.hexdigits for c in body['vid'][2:]):
                                 vid = body['vid'].lower()
                             else:
@@ -192,7 +192,7 @@ jobs:
                         else:
                             vid = ''
 
-                        if 'ext' in dict:
+                        if 'ext' in body:
                             try:
                                 import wget
                             except ModuleNotFoundError:
