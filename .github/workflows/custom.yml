@@ -373,33 +373,28 @@ jobs:
 
           if [ ${{ steps.info.outputs.platform }} == 'DS3615xs' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-3.10.108.tgz
-            tar zxvf redpill-3.10.108.tgz -C ./redpill-3.10.108
-            mv ./redpill-3.10.108/redpill.ko ./ext/rp-lkm/redpill-linux-v3.10.108.ko
+            tar zxvf redpill-3.10.108.tgz -C ./ && mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v3.10.108.ko
           fi
 
           if [ ${{ steps.info.outputs.platform }} == 'DS3617xs' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-4.4.180plus-broadwell.tgz
-            tar zxvf redpill-4.4.180plus-broadwell.tgz -C ./redpill-4.4.180plus-broadwell
-            mv ./redpill-4.4.180plus-broadwell/redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
+            tar zxvf redpill-4.4.180plus-broadwell.tgz -C ./ && mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
           fi
 
           if [ ${{ steps.info.outputs.platform }} == 'DS918+' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-4.4.180plus.tgz
-            tar zxvf redpill-4.4.180plus.tgz -C ./redpill-4.4.180plus
-            mv ./redpill-4.4.180plus/redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
+            tar zxvf redpill-4.4.180plus.tgz -C ./ && mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
           fi
 
           if [ ${{ steps.info.outputs.platform }} == 'DS920+' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-4.4.180plus-geminilake.tgz
-            tar zxvf redpill-4.4.180plus-geminilake.tgz -C ./redpill-4.4.180plus-geminilake
-            mv ./redpill-4.4.180plus-geminilake/redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
+            tar zxvf redpill-4.4.180plus-geminilake.tgz -C ./ && mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
             ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
           fi
 
           if [ ${{ steps.info.outputs.platform }} == 'DS3622xs+' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-4.4.180plus-broadwellnk.tgz
-            tar zxvf redpill-4.4.180plus-broadwellnk.tgz -C ./redpill-4.4.180plus-broadwellnk
-            mv ./redpill-4.4.180plus-broadwellnk/redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
+            tar zxvf redpill-4.4.180plus-broadwellnk.tgz -C ./ && mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v4.4.180+.ko
           fi
 
           if [ -n ${{ steps.info.outputs.ext }} ]; then
