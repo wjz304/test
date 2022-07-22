@@ -35,43 +35,43 @@ on:
 
       sataportmap: 
         description: 'SataPortMap'
-        required: true
+        required: false
         default: ''
         type: string
 
       diskidxmap: 
         description: 'DiskIdxMap'
-        required: true
+        required: false
         default: ''
         type: string
 
       sn: 
         description: 'sn'
-        required: true
+        required: false
         default: ''
         type: string
 
       mac: 
         description: 'mac'
-        required: true
+        required: false
         default: ''
         type: string
 
       pid: 
-        description: 'sn'
-        required: true
+        description: 'pid'
+        required: false
         default: '0x0001'
         type: string
 
       vid: 
-        description: 'mac'
-        required: true
+        description: 'vid'
+        required: false
         default: '0x46f4'
         type: string
 
       ext: 
         description: 'ext'
-        required: true
+        required: false
         default: ''
         type: string
 
@@ -122,11 +122,11 @@ jobs:
 
             if __name__ == '__main__':
                 
-                if ${{ github.event_name }} == 'issues':
-                    if ${{ github.event.issue.title }}.lower().startswith('custom'):
+                if '${{ github.event_name }}' == 'issues':
+                    if '${{ github.event.issue.title }}'.lower().startswith('custom'):
                         issues = 'true'
 
-                        body = json.loads(${{ github.event.issue.body }})
+                        body = json.loads('${{ github.event.issue.body }}')
                         
                         if 'platform' in dict:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
