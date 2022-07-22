@@ -416,11 +416,14 @@ jobs:
           if [ ${{ env.iscustom }} == 'true' ]; then
             echo "👉 issues: [#${{ github.event.issue.number }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }})" >> $GITHUB_STEP_SUMMARY
           else
-            echo "👉 "pid": "0x0001", "vid": "0x46f4", "sn": "2150SQRW1ZAHH", "mac1": "001132FA6CD3", "mac2": "001132FA6CD4"," >> $GITHUB_STEP_SUMMARY
+            echo "👉 "platform": "${{ steps.info.outputs.platform }}", "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
+            echo "👉 "sataportmap": "${{ steps.info.outputs.sataportmap }}", "diskidxmap": "${{ steps.info.outputs.diskidxmap }}"  " >> $GITHUB_STEP_SUMMARY
+            echo "👉 "sn": "${{ steps.info.outputs.sn }}", "mac": "${{ steps.info.outputs.mac }}"  " >> $GITHUB_STEP_SUMMARY
+            echo "👉 "pid": "${{ steps.info.outputs.pid }}", "vid": "${{ steps.info.outputs.vid }}"  " >> $GITHUB_STEP_SUMMARY
+            echo "👉 "ext": "${{ steps.info.outputs.ext }}"  " >> $GITHUB_STEP_SUMMARY
           fi
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=repository_name::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
-
 
       - name: Upload to Artifacts
         if: steps.info.outputs.iscustom == 'true'
