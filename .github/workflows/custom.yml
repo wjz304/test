@@ -113,12 +113,6 @@ jobs:
           script: |
             import os, json, string
 
-            try:
-                import urllib3
-            except ModuleNotFoundError:
-                os.system('pip3 install urllib3')
-                import urllib3
-
             if __name__ == '__main__':
                 
                 if '${{ github.event_name }}' == 'issues':
@@ -193,6 +187,11 @@ jobs:
                             vid = ''
 
                         if 'ext' in dict:
+                            try:
+                                import wget
+                            except ModuleNotFoundError:
+                                os.system('pip3 install wget')
+                                import wget
                             if os.path.exists('rpExtsFile'):
                                 os.remove('rpExtsFile')
                             res = wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/exts', out='rpExtsFile')
@@ -327,6 +326,11 @@ jobs:
 
                 dat = []
                 if '${{ steps.info.outputs.sn }}' == '' or '${{ steps.info.outputs.mac }}' == '':
+                    try:
+                        import wget
+                    except ModuleNotFoundError:
+                        os.system('pip3 install wget')
+                        import wget
                     res = wget.download('https://raw.githubusercontent.com/pocopico/tinycore-redpill/main/serialnumbergen.sh', out='serialnumbergen.sh')
                     os.popen('sed -i "s|echo.*\$(generateMacAddress)|echo \$(generateMacAddress)|g" serialnumbergen.sh')
                     os.popen('sed -i "s|echo.*\$(generateSerial \$1)|echo \$(generateSerial \$1)|g" serialnumbergen.sh')
