@@ -129,9 +129,12 @@ jobs:
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ github.event.issue.title }}'.lower().startswith('custom'):
                         issues = 'true'
-                        
+                        body = {}
                         body = json.loads('${{ github.event.issue.body }}')
                         
+                        if len(body) == 0:
+                            iscustom = 'false'
+                            
                         if 'platform' in body:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                                 platform = body['platform']
@@ -199,7 +202,7 @@ jobs:
                             else:
                                 iscustom = 'false'
 
-                        if 'jun' in dict:
+                        if 'jun' in body:
                             if body['jun'] in ['0', '1']:
                                 jun = body['jun']
                             else:
