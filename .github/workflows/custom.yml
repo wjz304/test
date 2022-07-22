@@ -101,7 +101,6 @@ jobs:
         uses: actions/checkout@main
 
       - name: Init Env
-        if: steps.info.outputs.iscustom == 'true'
         run : |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
@@ -220,16 +219,16 @@ jobs:
                 else:
                     issues = 'false'
                     iscustom = 'true'
-                    platform = ${{ inputs.platform }}
-                    version = ${{ inputs.version }}
-                    sataportmap = ${{ inputs.sataportmap }}
-                    diskidxmap = ${{ inputs.diskidxmap }}
-                    sn = ${{ inputs.sn }}
-                    pid = ${{ inputs.pid }}
-                    vid = ${{ inputs.vid }}
-                    mac = ${{ inputs.mac }}
-                    ext = ${{ inputs.ext }}
-                    jun = ${{ inputs.jun }}
+                    platform = '${{ inputs.platform }}'
+                    version = '${{ inputs.version }}'
+                    sataportmap = '${{ inputs.sataportmap }}'
+                    diskidxmap = '${{ inputs.diskidxmap }}'
+                    sn = '${{ inputs.sn }}'
+                    pid = '${{ inputs.pid }}'
+                    vid = '${{ inputs.vid }}'
+                    mac = '${{ inputs.mac }}'
+                    ext = '${{ inputs.ext }}'
+                    jun = '${{ inputs.jun }}'
 
                 set_output('issues', issues)
                 set_output('iscustom', iscustom)
