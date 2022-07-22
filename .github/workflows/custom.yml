@@ -369,7 +369,7 @@ jobs:
           cd redpill-load
 
           # 添加扩展驱动
-          ./ext-manager.sh add https://github.com/pocopico/redpill-load/blob/master/redpill-boot-wait/rpext-index.json
+          # ./ext-manager.sh add https://github.com/pocopico/redpill-load/blob/master/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://github.com/pocopico/redpill-load/raw/master/redpill-acpid/rpext-index.json
           ./ext-manager.sh add https://github.com/pocopico/redpill-load/raw/master/redpill-misc/rpext-index.json
           ./ext-manager.sh add https://github.com/pocopico/redpill-load/raw/master/redpill-virtio/rpext-index.json
