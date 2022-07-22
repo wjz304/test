@@ -106,9 +106,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
-          # if '${{ github.event_name }}' == 'issues':
-          #     echo "${{ github.event.issue.body }}" > issuebody.txt
-
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
         id: info
@@ -117,55 +114,53 @@ jobs:
             import os, re, json, string
 
             if __name__ == '__main__':
-                
+
+                platform = 'DS918+'
+                version = '7.1.0-42661'
+                sataportmap = ''
+                diskidxmap = ''
+                sn = ''
+                mac = ''
+                pid = ''
+                vid = ''
+                ext = ''
+                jun = '0'
+
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ github.event.issue.title }}'.lower().startswith('custom'):
                         issues = 'true'
                         
                         body = json.loads('${{ github.event.issue.body }}')
-                        # body = {}
-                        # with open('issuebody.txt', 'r', encoding="utf-8") as f:
-                        #     body = json.load(f)
                         
                         if 'platform' in body:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                                 platform = body['platform']
                             else:
                                 iscustom = 'false'
-                        else:
-                            platform = 'DS918+'
 
                         if 'version' in body:
                             if body['version'] in ['7.1.0-42661', '7.0.1-42218']:
                                 version = body['version']
                             else:
                                 iscustom = 'false'
-                        else:
-                            version = '7.1.0-42661'
-                        
+
                         if 'sataportmap' in body:
                             if body['sataportmap'].isdigit():
                                 sataportmap = body['sataportmap']
                             else:
                                 iscustom = 'false'
-                        else:
-                            sataportmap = '1'
 
                         if 'diskidxmap' in body:
                             if all(c in string.hexdigits for c in body['diskidxmap']) and len(body['diskidxmap']) == 2 * len(body['sataportmap']):
                                 diskidxmap = body['diskidxmap']
                             else:
                                 iscustom = 'false'
-                        else:
-                            diskidxmap = '10'
 
                         if 'sn' in body:
                             if body['sn'].isalnum():
                                 sn = body['sn']
                             else:
                                 iscustom = 'false'
-                        else:
-                            sn = ''
                         
                         if 'mac' in body:
                             macs = [x.strip() for x in re.split(',| |\|',body['mac']) if x.strip()!='']
@@ -173,24 +168,18 @@ jobs:
                                 iscustom = 'false'
                             else:
                                 mac = ','.join(macs)
-                        else:
-                            mac = ''
                         
                         if 'pid' in body:
                             if len(body['pid']) == 6 and body['pid'].lower().startswith('0x') and all(c in string.hexdigits for c in body['pid'][2:]):
                                 pid = body['pid'].lower()
                             else:
                                 iscustom = 'false'
-                        else:
-                            pid = ''
-                        
+
                         if 'vid' in body:
                             if len(body['vid']) == 6 and body['vid'].lower().startswith('0x') and all(c in string.hexdigits for c in body['vid'][2:]):
                                 vid = body['vid'].lower()
                             else:
                                 iscustom = 'false'
-                        else:
-                            vid = ''
 
                         if 'ext' in body:
                             try:
@@ -205,22 +194,19 @@ jobs:
                                 rpExts = f.readlines()
                             rpExts = [x.strip() for x in rpExts]
                             exts = [x.strip() for x in re.split(',| |\|',body['ext']) if x.strip()!='']
-                            if len(ext) > 0 and not set(exts) <= set(rpExts):
+                            if len(exts) > 0 and not set(exts) <= set(rpExts):
                                 ext = ','.join(exts)
                             else:
                                 iscustom = 'false'
-                        else:
-                            ext = ''
 
                         if 'jun' in dict:
                             if body['jun'] in ['0', '1']:
                                 jun = body['jun']
                             else:
                                 iscustom = 'false'
-                        else:
-                            jun = '0'
                     else:
                         issues = 'false'
+
                 else:
                     issues = 'false'
                     iscustom = 'true'
