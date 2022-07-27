@@ -106,6 +106,16 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
+      - name: Get Issues
+        if: github.event_name == 'issues'
+        run: |
+          POST_TITLE=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ inputs.title }}')
+          POST_BODY=$(echo '${{ github.event.issue.body }}' | xargs echo -n)
+
+          echo $POST_TITLE
+          echo $POST_BODY
+          
+
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
         id: info
