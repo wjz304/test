@@ -110,7 +110,7 @@ jobs:
         if: github.event_name == 'issues'
         run: |
           issuetitle=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ github.event.issue.title }}')
-          issuebodys=$(echo '${{ github.event.issue.body }}' | tr '\n' ' ')
+          issuebodys=$(echo '${{ github.event.issue.body }}' | tr '\r' ' ' | tr '\n' ' ')
 
           echo ${issuetitle}
           echo ${issuebodys}
