@@ -109,7 +109,7 @@ jobs:
       - name: Get Issues
         if: github.event_name == 'issues'
         run: |
-          POST_TITLE=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ github.event.issue.body }}')
+          POST_TITLE=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ github.event.issue.title }}')
           POST_BODY=$(echo '${{ github.event.issue.body }}' | tr '\n' '')
 
           echo $POST_TITLE
