@@ -418,7 +418,12 @@ jobs:
             sed -i "s/$(jq -r .os.sha256 ${configfile})/$(sha256sum ./cache/$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')_42661.pat | awk '{print $1}')/g" ${configfile}
             jq -r .os.sha256 ${configfile}
           fi
-
+          
+          jun=${{ steps.info.outputs.jun }}
+          if [ ${{ steps.info.outputs.version }} == '7.1.0-42661' ]; then 
+            jun=0
+          fi
+          
           # 添加必备驱动
           ./ext-manager.sh add https://github.com/pocopico/redpill-load/blob/master/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://github.com/pocopico/redpill-load/raw/master/redpill-acpid/rpext-index.json
@@ -463,7 +468,7 @@ jobs:
 
           # 编译
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
-          sudo BRP_JUN_MOD=${{ steps.info.outputs.jun }} BRP_DEBUG=1 BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
+          sudo BRP_JUN_MOD=${jun} BRP_DEBUG=1 BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
 
       - name: Generate release tag
         if: steps.info.outputs.iscustom == 'true' && success()
