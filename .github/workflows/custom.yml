@@ -399,12 +399,13 @@ jobs:
           sudo apt update
           sudo apt-get install curl bspatch jq git -y
 
+          repo=jumkey/redpill-load
           if [ ${{ steps.info.outputs.version }} == '7.1.0-42661' ]; then 
-            git clone https://github.com/pocopico/redpill-load.git redpill-load
-          else
-            git clone https://github.com/jumkey/redpill-load.git redpill-load
+            repo=pocopico/redpill-load
           fi 
-          
+
+          git clone https://github.com/${repo} redpill-load
+
           cp user_config.json redpill-load/user_config.json
 
           cd redpill-load
@@ -425,10 +426,10 @@ jobs:
           fi
           
           # 添加必备驱动
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/master/redpill-boot-wait/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/master/redpill-acpid/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/master/redpill-misc/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/master/redpill-virtio/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-boot-wait/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-acpid/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-misc/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-virtio/rpext-index.json
 
           if [ ${{ steps.info.outputs.platform }} == 'DS3615xs' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-3.10.108.tgz
