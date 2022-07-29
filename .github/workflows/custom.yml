@@ -426,7 +426,7 @@ jobs:
           fi
           
           # 添加必备驱动
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-boot-wait/rpext-index.json
+          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-acpid/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-misc/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-virtio/rpext-index.json
