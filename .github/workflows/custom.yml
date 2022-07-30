@@ -362,7 +362,7 @@ jobs:
                     dat = os.popen('bash ./serialnumbergen.sh ${{ steps.info.outputs.platform }}').readlines()
                 
                 if '${{ steps.info.outputs.sn }}' != '':
-                    config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.pid }}'
+                    config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.sn }}'
                 elif len(dat) == 2:
                     config["extra_cmdline"]["sn"] = dat[1].strip()
 
@@ -442,7 +442,7 @@ jobs:
             sed -i "s/$(jq -r .os.sha256 ${configfile})/$(sha256sum ./cache/$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')_42661.pat | awk '{print $1}')/g" ${configfile}
             jq -r .os.sha256 ${configfile}
           fi
-          
+
           # 添加必备驱动
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
