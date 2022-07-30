@@ -481,7 +481,7 @@ jobs:
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
 
           # redpill.ko
-          synomodel=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')_$(echo ${{ steps.info.outputs.platform }} | awk -F - '{print $2}')
+          synomodel=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')_$(echo ${{ steps.info.outputs.version }} | awk -F - '{print $2}')
           extension=$(curl -s --location "https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill/rpext-index.json")
           redpilltgz=$(curl -s --location "$(echo ${extension} | jq -r .releases.$synomodel)" | jq -r '.files[] .url')
           wget ${redpilltgz}
