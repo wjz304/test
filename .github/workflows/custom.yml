@@ -250,7 +250,7 @@ jobs:
                     vid = '${{ inputs.vid }}'
                     mac = '${{ inputs.mac }}'
                     ext = '${{ inputs.ext }}'
-                    exp = '${{ inputs.exp }}'
+                    exp = 'pocopico'
                     jun = '${{ inputs.jun }}'
 
                 set_output('issues', issues)
