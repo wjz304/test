@@ -75,14 +75,14 @@ on:
         default: ''
         type: string
 
-      exp:
-        description: 'jumkey pocopico'
-        required: true
-        default: 'jumkey' 
-        type: choice
-        options:
-        - 'jumkey'
-        - 'pocopico'
+#      exp:
+#        description: 'jumkey pocopico'
+#        required: true
+#        default: 'jumkey' 
+#        type: choice
+#        options:
+#        - 'jumkey'
+#        - 'pocopico'
 
       jun:
         description: 'jun'
