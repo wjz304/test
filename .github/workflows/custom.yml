@@ -109,6 +109,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install curl bspatch jq git -y
+          python -m pip install --upgrade pip setuptools
+
       - name: Get Issues
         if: github.event_name == 'issues'
         run: |
@@ -438,9 +443,7 @@ jobs:
             pwd
           }
 
-          sudo apt update
-          sudo apt-get install curl bspatch jq git -y
-
+          # 开始表演
 
           repo=${{ steps.info.outputs.exp }}
           branch=develop
@@ -526,7 +529,7 @@ jobs:
             echo "👉 "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "ext": "${{ steps.info.outputs.ext }}"  " >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=repository_name::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
 
