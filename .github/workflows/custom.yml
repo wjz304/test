@@ -64,13 +64,13 @@ on:
         type: string
 
       exp:
-        description: 'jumkey pocopico'
+        description: 'pocopico jumkey'
         required: true
-        default: 'jumkey' 
+        default: 'pocopico' 
         type: choice
         options:
-        - 'jumkey'
         - 'pocopico'
+        - 'jumkey'
 
       jun:
         description: 'jun'
@@ -138,7 +138,7 @@ jobs:
                 ext = ''
                 jun = '0'
                 
-                info = ''
+                errinfo = ''
 
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ env.issuetitle }}'.lower().startswith('custom'):
@@ -149,51 +149,51 @@ jobs:
                         
                         if len(body) == 0:
                             iscustom = 'false'
-                            info = 'body error'
+                            errinfo = 'body error'
 
                         if 'platform' in body:
                             if body['platform'] in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                                 platform = body['platform']
                             else:
                                 iscustom = 'false'
-                                info = 'platform parameter error'
+                                errinfo = 'platform parameter error'
 
                         if 'version' in body:
                             if body['version'] in ['7.1.0-42661', '7.0.1-42218']:
                                 version = body['version']
                             else:
                                 iscustom = 'false'
-                                info = 'version parameter error'
+                                errinfo = 'version parameter error'
 
                         if 'map' in body:
                             maps = [x.strip() for x in re.split(',| |\|',body['map']) if x.strip()!='']
                             if len(maps) != 2:
                                 iscustom = 'false'
-                                info = 'map parameter error'
+                                errinfo = 'map parameter error'
                             else:
                                 if maps[0].isdigit():
                                     sataportmap = maps[0]
                                 else:
                                     iscustom = 'false'
-                                    info = 'map[sataportmap] parameter error'
+                                    errinfo = 'map[sataportmap] parameter error'
                                 if all(c in string.hexdigits for c in maps[1]) and len(maps[1]) == 2 * len(maps[0]):
                                     diskidxmap = maps[1]
                                 else:
                                     iscustom = 'false'
-                                    info = 'map[diskidxmap] parameter error'
+                                    errinfo = 'map[diskidxmap] parameter error'
 
                         if 'sn' in body:
                             if body['sn'].isalnum():
                                 sn = body['sn']
                             else:
                                 iscustom = 'false'
-                                info = 'sn parameter error'
+                                errinfo = 'sn parameter error'
 
                         if 'mac' in body:
                             macs = [x.strip() for x in re.split(',| |\|',body['mac']) if x.strip()!='']
                             if len(macs) <= 0 or len(macs) > 8:
                                 iscustom = 'false'
-                                info = 'mac parameter error'
+                                errinfo = 'mac parameter error'
                             else:
                                 mac = ','.join(macs)
                         
@@ -201,19 +201,19 @@ jobs:
                             usbs = [x.strip() for x in re.split(',| |\|',body['usb']) if x.strip()!='']
                             if len(maps) != 2:
                                 iscustom = 'false'
-                                info = 'usb parameter error'
+                                errinfo = 'usb parameter error'
                             else:
                                 if len(usbs[0]) == 6 and usbs[0].lower().startswith('0x') and all(c in string.hexdigits for c in usbs[0][2:]):
                                     pid = usbs[0].lower()
                                 else:
                                     iscustom = 'false'
-                                    info = 'usb[pid] parameter error'
+                                    errinfo = 'usb[pid] parameter error'
 
                                 if len(usbs[1]) == 6 and usbs[1].lower().startswith('0x') and all(c in string.hexdigits for c in usbs[1][2:]):
                                     vid = usbs[1].lower()
                                 else:
                                     iscustom = 'false'
-                                    info = 'usb[vid] parameter error'
+                                    errinfo = 'usb[vid] parameter error'
 
                         if 'ext' in body:
                             try:
@@ -232,21 +232,22 @@ jobs:
                                 ext = ','.join(exts)
                             else:
                                 iscustom = 'false'
-                                info = 'ext parameter error'
+                                errinfo = 'ext parameter error'
 
                         if 'exp' in body:
                             if body['exp'] in ['jumkey', 'pocopico']:
                                 exp = body['exp']
                             else:
                                 iscustom = 'false'
-                                info = 'exp parameter error'
+                                errinfo = 'exp parameter error'
 
                         if 'jun' in body:
                             if body['jun'] in ['0', '1']:
                                 jun = body['jun']
                             else:
                                 iscustom = 'false'
-                                info = 'jun parameter error'
+                                errinfo = 'jun parameter error'
+
                     else:
                         iscustom = 'false'
                 else:
@@ -270,6 +271,7 @@ jobs:
 
                 set_output('issues', issues)
                 set_output('iscustom', iscustom)
+                set_output('errinfo', errinfo)
 
                 set_output('platform', platform)
                 set_output('version', version)
@@ -319,10 +321,12 @@ jobs:
           body: |
             ${{ github.event.issue.user.login }} 您好.
             您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  
+            error info: ${{ steps.info.outputs.errinfo }}
             > 
             ----
             Hi ${{ github.event.issue.user.login }}. 
             The information filled in by your customized Redpill cannot be parsed. Please refer to the template and restart customization.
+            error info: ${{ steps.info.outputs.errinfo }}
             > 
           emoji: confused
 
