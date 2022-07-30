@@ -75,6 +75,15 @@ on:
         default: ''
         type: string
 
+      exp:
+        description: 'jumkey pocopico'
+        required: true
+        default: 'jumkey' 
+        type: choice
+        options:
+        - 'jumkey'
+        - 'pocopico'
+
       jun:
         description: 'jun'
         required: true
@@ -218,6 +227,12 @@ jobs:
                             else:
                                 iscustom = 'false'
 
+                        if 'exp' in body:
+                            if body['exp'] in ['jumkey', 'pocopico']:
+                                exp = body['exp']
+                            else:
+                                iscustom = 'false'
+
                         if 'jun' in body:
                             if body['jun'] in ['0', '1']:
                                 jun = body['jun']
@@ -235,6 +250,7 @@ jobs:
                     vid = '${{ inputs.vid }}'
                     mac = '${{ inputs.mac }}'
                     ext = '${{ inputs.ext }}'
+                    exp = '${{ inputs.exp }}'
                     jun = '${{ inputs.jun }}'
 
                 set_output('issues', issues)
@@ -249,6 +265,7 @@ jobs:
                 set_output('pid', pid)
                 set_output('vid', vid)
                 set_output('ext', ext)
+                set_output('exp', exp)
                 set_output('jun', jun)
 
       - name: Add labels
@@ -399,12 +416,18 @@ jobs:
           sudo apt update
           sudo apt-get install curl bspatch jq git -y
 
-          repo=jumkey/redpill-load
-          if [ ${{ steps.info.outputs.version }} == '7.1.0-42661' ]; then 
-            repo=pocopico/redpill-load
-          fi 
 
-          git clone https://github.com/${repo} redpill-load
+          repo=${{ steps.info.outputs.exp }}
+          branch=develop
+          bArgs=''
+          if [ ${{ steps.info.outputs.jun }} == '1' ]; then 
+            bArgs='BRP_JUN_MOD=1 BRP_DEBUG=1 '
+            if [ ${repo} == 'pocopico' ]; then 
+              branch=jun
+            fi
+          fi
+
+          git clone -b ${branch} https://github.com/${repo}/redpill-load redpill-load
 
           cp user_config.json redpill-load/user_config.json
 
@@ -420,16 +443,11 @@ jobs:
             jq -r .os.sha256 ${configfile}
           fi
           
-          jun=${{ steps.info.outputs.jun }}
-          if [ ${{ steps.info.outputs.version }} == '7.1.0-42661' ]; then 
-            jun=0
-          fi
-          
           # 添加必备驱动
-          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-boot-wait/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-acpid/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-misc/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/master/redpill-virtio/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
 
           if [ ${{ steps.info.outputs.platform }} == 'DS3615xs' ]; then
             wget https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill/releases/redpill-3.10.108.tgz
@@ -469,7 +487,7 @@ jobs:
 
           # 编译
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
-          sudo BRP_JUN_MOD=${jun} BRP_DEBUG=1 BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
+          sudo ${bArgs} BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
 
       - name: Generate release tag
         if: steps.info.outputs.iscustom == 'true' && success()
