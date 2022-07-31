@@ -367,8 +367,7 @@ jobs:
                         "support_disk_compatibility": "no",
                         "support_memory_compatibility": "no"
                     },
-                    "ramdisk_copy": {},
-                    "extensions": []
+                    "ramdisk_copy": {}
                 }
 
                 if '${{ steps.info.outputs.sataportmap }}' != '':
