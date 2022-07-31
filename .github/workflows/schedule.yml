@@ -26,7 +26,6 @@ jobs:
           sudo timedatectl set-timezone "Asia/Shanghai"
           echo "::set-output name=releasetag::$(date +"%Y.%m.%d-%H%M")"
           echo releasetag: ${{ steps.initenv.outputs.releasetag }}
-    
     strategy:
       fail-fast: false
       matrix:
@@ -56,20 +55,20 @@ jobs:
             jun: 0
 
           # 更多 请安以上格式添加
-
-  steps:
-    name: Build ${{ matrix.platform }} ${{ matrix.version }}
-    needs: initjob
-    uses: ./.github/workflows/custom.yml
-    with:
+          
+  build:
+      name: Build ${{ matrix.platform }} ${{ matrix.version }}
+      needs: initjob
+      uses: ./.github/workflows/custom.yml
+      with:
 #      releasetag: ${{ needs.initjob.outputs.releasetag }}
-      platform: ${{ matrix.platform }}
-      version: ${{ matrix.version }}
-      map: ${{ matrix.map }}
-      dtb: ${{ matrix.dtb }}
-      sn:  ${{ matrix.sn }}
-      mac: ${{ matrix.mac }}
-      usb: ${{ matrix.usb }}
-      ext: ${{ matrix.ext }}
-      exp: ${{ matrix.exp }}
-      jun: ${{ matrix.jun }}
+        platform: ${{ needs.initjob.matrix.platform }}
+        version: ${{ needs.initjob.matrix.version }}
+        map: ${{ needs.initjob.matrix.map }}
+        dtb: ${{ needs.initjob.matrix.dtb }}
+        sn:  ${{ needs.initjob.matrix.sn }}
+        mac: ${{ needs.initjob.matrix.mac }}
+        usb: ${{ needs.initjob.matrix.usb }}
+        ext: ${{ needs.initjob.matrix.ext }}
+        exp: ${{ needs.initjob.matrix.exp }}
+        jun: ${{ needs.initjob.matrix.jun }}
