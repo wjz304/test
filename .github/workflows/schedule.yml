@@ -17,15 +17,7 @@ jobs:
   initjob:
     name: Initialization
     runs-on: ubuntu-latest
-    outputs:
-      releasetag: ${{ steps.initenv.outputs.releasetag }}
-    steps:
-      - name: Init releasetag
-        id: initenv
-        run: |
-          sudo timedatectl set-timezone "Asia/Shanghai"
-          echo "::set-output name=releasetag::$(date +"%Y.%m.%d-%H%M")"
-          echo releasetag: ${{ steps.initenv.outputs.releasetag }}
+    
     strategy:
       fail-fast: false
       matrix:
@@ -55,20 +47,25 @@ jobs:
             jun: 0
 
           # 更多 请安以上格式添加
+    steps:
+      - name: Init releasetag
+        id: initenv
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "::set-output name=releasetag::$(date +"%Y.%m.%d-%H%M")"
+          echo releasetag: ${{ steps.initenv.outputs.releasetag }}
           
-  build:
-      name: Build ${{ matrix.platform }} ${{ matrix.version }}
-      needs: initjob
-      uses: ./.github/workflows/custom.yml
-      with:
-#      releasetag: ${{ needs.initjob.outputs.releasetag }}
-        platform: ${{ needs.initjob.matrix.platform }}
-        version: ${{ needs.initjob.matrix.version }}
-        map: ${{ needs.initjob.matrix.map }}
-        dtb: ${{ needs.initjob.matrix.dtb }}
-        sn:  ${{ needs.initjob.matrix.sn }}
-        mac: ${{ needs.initjob.matrix.mac }}
-        usb: ${{ needs.initjob.matrix.usb }}
-        ext: ${{ needs.initjob.matrix.ext }}
-        exp: ${{ needs.initjob.matrix.exp }}
-        jun: ${{ needs.initjob.matrix.jun }}
+      - name: Build ${{ matrix.platform }} ${{ matrix.version }}
+        uses: ./.github/workflows/custom.yml
+        with:
+  #      releasetag: ${{ outputs.releasetag }}
+          platform: ${{ matrix.platform }}
+          version: ${{ matrix.version }}
+          map: ${{ matrix.map }}
+          dtb: ${{ matrix.dtb }}
+          sn:  ${{ matrix.sn }}
+          mac: ${{ matrix.mac }}
+          usb: ${{ matrix.usb }}
+          ext: ${{ matrix.ext }}
+          exp: ${{ matrix.exp }}
+          jun: ${{ matrix.jun }}
