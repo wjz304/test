@@ -62,7 +62,7 @@ jobs:
     needs: initjob
     uses: ./.github/workflows/custom.yml
     with:
-      releasetag: ${{ needs.initjob.outputs.releasetag }}
+#      releasetag: ${{ needs.initjob.outputs.releasetag }}
       platform: ${{ matrix.platform }}
       version: ${{ matrix.version }}
       map: ${{ matrix.map }}
