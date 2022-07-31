@@ -48,7 +48,8 @@ jobs:
 
           # 更多 请安以上格式添加
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@main
         
       - name: Init releasetag
         id: initenv
