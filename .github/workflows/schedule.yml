@@ -32,28 +32,30 @@ jobs:
       matrix:
         include:
           #  定时定制 1
-          - platform:
-            version: 
+          - platform: DS3622xs+
+            version: 7.0.1-42218
             map: ''
             dtb: ''
             sn:  ''
             mac: ''
             usb: ''
-            ext: ''
-            exp: 'pocopico'
-            jun: '0'
+            ext: r8125, igb, bnx2, r8169, sky2, tg3, vmxnet3, e1000, e1000e
+            exp: pocopico
+            jun: 1
 
           #  定时定制 2
-          - platform:
-            version: 
+          - platform: DS3622xs+
+            version: 7.1.0-42661
             map: ''
             dtb: ''
             sn:  ''
             mac: ''
-            usb: ''
-            ext: ''
-            exp: 'pocopico'
-            jun: '0'
+            usb: 0x0001, 0x46f4
+            ext: r8125, igb, bnx2, r8169, sky2, tg3, vmxnet3, e1000, e1000e
+            exp: pocopico
+            jun: 0
+
+          # 更多 请安以上格式添加
 
   steps:
     name: Build ${{ matrix.platform }} ${{ matrix.version }}
