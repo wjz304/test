@@ -1,0 +1,73 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+
+name: Redpill Build (schedule)
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  
+jobs:
+  initjob:
+    name: Initialization
+    runs-on: ubuntu-latest
+    outputs:
+      releasetag: ${{ steps.initenv.outputs.releasetag }}
+    steps:
+      - name: Init releasetag
+        id: initenv
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "::set-output name=releasetag::$(date +"%Y.%m.%d-%H%M")"
+          echo releasetag: ${{ steps.initenv.outputs.releasetag }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          #  定时定制 1
+          - platform:
+            version: 
+            map: ''
+            dtb: ''
+            sn:  ''
+            mac: ''
+            usb: ''
+            ext: ''
+            exp: 'pocopico'
+            jun: '0'
+
+          #  定时定制 2
+          - platform:
+            version: 
+            map: ''
+            dtb: ''
+            sn:  ''
+            mac: ''
+            usb: ''
+            ext: ''
+            exp: 'pocopico'
+            jun: '0'
+
+  steps:
+    name: Build ${{ matrix.platform }} ${{ matrix.version }}
+    needs: initjob
+    uses: ./.github/workflows/custom.yml
+    with:
+      releasetag: ${{ needs.initjob.outputs.releasetag }}
+      platform: ${{ matrix.platform }}
+      version: ${{ matrix.version }}
+      map: ${{ matrix.map }}
+      dtb: ${{ matrix.dtb }}
+      sn:  ${{ matrix.sn }}
+      mac: ${{ matrix.mac }}
+      usb: ${{ matrix.usb }}
+      ext: ${{ matrix.ext }}
+      exp: ${{ matrix.exp }}
+      jun: ${{ matrix.jun }}

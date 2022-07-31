@@ -88,6 +88,48 @@ on:
         - '0'
         - '1'
 
+  workflow_call:
+    inputs:
+      platform:
+        required: true
+        type: string
+
+      version:
+        required: true
+        type: string
+
+      map: 
+        required: true
+        type: string
+
+      dtb: 
+        required: true
+        type: string
+
+      sn:
+        required: true
+        type: string
+
+      mac: 
+        required: true
+        type: string
+
+      usb: 
+        required: true
+        type: string
+
+      ext:
+        required: true
+        type: string
+      
+      exp: 
+        required: true
+        type: string
+
+      jun:
+        required: true
+        type: string
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -553,8 +595,6 @@ jobs:
               ./ext-manager.sh add "https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json"
             done
           fi
-
-          ls -al ./custom/extensions
 
           # 编译
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
