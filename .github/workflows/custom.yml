@@ -323,7 +323,7 @@ jobs:
                         errinfo = 'mac parameter error'
 
                 if usb != '':
-                    usbs = [x.strip() for x in re.split(',| |\|',body['usb']) if x.strip()!='']
+                    usbs = [x.strip() for x in re.split(',| |\|', usb) if x.strip() != '']
                     if len(usbs) == 2 \
                     and len(usbs[0]) == 6 and usbs[0].lower().startswith('0x') and all(c in string.hexdigits for c in usbs[0][2:]) \
                     and len(usbs[1]) == 6 and usbs[1].lower().startswith('0x') and all(c in string.hexdigits for c in usbs[1][2:]):
@@ -345,7 +345,7 @@ jobs:
                     with open('rpExtsFile', mode="r") as f:
                         rpExts = f.readlines()
                     rpExts = [x.strip() for x in rpExts]
-                    exts = [x.strip() for x in re.split(',| |\|',body['ext']) if x.strip()!='']
+                    exts = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '']
                     if len(exts) > 0 and set(exts) <= set(rpExts):
                         ext = ','.join(exts)
                     else:
