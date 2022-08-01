@@ -206,7 +206,7 @@ jobs:
                             if 'platform' in body: platform = body['platform']
                             if 'version' in body: version = body['version']
                             if 'map' in body: map = body['map']
-                            if 'dtb' in body: map = body['dtb']
+                            if 'dtb' in body: dtb = body['dtb']
                             if 'sn' in body: sn = body['sn']
                             if 'mac' in body: mac = body['mac']
                             if 'usb' in body: usb = body['usb']
@@ -218,7 +218,7 @@ jobs:
                 else:
                     platform = '${{ inputs.platform }}'
                     version = '${{ inputs.version }}'
-                    map = '${{ inputs.maps }}'
+                    map = '${{ inputs.map }}'
                     dtb = '${{ inputs.dtb }}'
                     sn = '${{ inputs.sn }}'
                     mac = '${{ inputs.mac }}'
