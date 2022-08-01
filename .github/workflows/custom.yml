@@ -294,18 +294,19 @@ jobs:
                                         down = '{}.dtb'.format(name)
                                     else:
                                         iscustom = 'false'
+                                        errinfo = 'dtb parameter error, <{}>.'.format(errinfo)
                                 else:
                                     iscustom = 'false'
-                                    errinfo = 'dtc download error, Please try again later.'
+                                    errinfo = 'dtb parameter error, <dtc tool download error, Please try again later>.'
 
                             if down.endswith('dtb') and os.path.exists(down) and os.path.getsize(down) > 0:
                                 dtb = down
                             else:
                                 iscustom = 'false'
-                                errinfo = 'dtb parameter error, urlfile error no valid ".dts/.dtb" file found.'
+                                errinfo = 'dtb parameter error, <urlfile error no valid ".dts/.dtb" file found>.'
                     except Exception as err:
                         iscustom = 'false'
-                        errinfo = 'dtb parameter error, {}'.format(err.replace('<', '').replace('>', ''))
+                        errinfo = 'dtb parameter error, {}.'.format(err)
 
                 if sn != '' and not sn.isalnum():
                     iscustom = 'false'
