@@ -199,23 +199,23 @@ jobs:
                         body = {}
                         try:
                             body = json.loads('${{ env.issuebodys }}')
-                        except:
-                            pass
-
-                        if len(body) == 0:
+                            if len(body) == 0:
+                                iscustom = 'false'
+                                errinfo = 'body error, body is null'
+                            else:
+                                if 'platform' in body: platform = body['platform']
+                                if 'version' in body: version = body['version']
+                                if 'map' in body: map = body['map']
+                                if 'dtb' in body: dtb = body['dtb']
+                                if 'sn' in body: sn = body['sn']
+                                if 'mac' in body: mac = body['mac']
+                                if 'usb' in body: usb = body['usb']
+                                if 'ext' in body: ext = body['ext']
+                                if 'exp' in body: exp = body['exp']
+                                if 'jun' in body: jun = body['jun']
+                        except Exception as err:
                             iscustom = 'false'
-                            errinfo = 'body error'
-                        else:
-                            if 'platform' in body: platform = body['platform']
-                            if 'version' in body: version = body['version']
-                            if 'map' in body: map = body['map']
-                            if 'dtb' in body: dtb = body['dtb']
-                            if 'sn' in body: sn = body['sn']
-                            if 'mac' in body: mac = body['mac']
-                            if 'usb' in body: usb = body['usb']
-                            if 'ext' in body: ext = body['ext']
-                            if 'exp' in body: exp = body['exp']
-                            if 'jun' in body: jun = body['jun']
+                            errinfo = 'body error, {}.'.format(err)
                     else:
                         iscustom = 'false'
                 else:
@@ -294,7 +294,7 @@ jobs:
                                         os.system('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         if os.path.exists('{}.dtb'.format(name)) and os.path.getsize('{}.dtb'.format(name)) > 0:
                                             print('dtc ok ...')
-                                            dtb = '{}.dtb'.format(name)
+                                            dtb = os.path.abspath('{}.dtb'.format(name))
                                         else:
                                             iscustom = 'false'
                                             errinfo = 'dtb parameter error, <{}>.'.format(errinfo.replace('\r', '').replace('\n', ' '))
@@ -302,7 +302,7 @@ jobs:
                                         iscustom = 'false'
                                         errinfo = 'dtb parameter error, <dtc tool download error, Please try again later>.'
                                 else:
-                                    dtb = down
+                                    dtb = os.path.abspath(down)
                             else:
                                 iscustom = 'false'
                                 errinfo = 'dtb parameter error, <urlfile error no valid ".dts/.dtb" file found>.'
