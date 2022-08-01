@@ -602,9 +602,9 @@ jobs:
 
           if [ ${{ steps.info.outputs.platform }} == 'DS920+' ]; then
             ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
+            ./ext-manager.sh _update_platform_exts ${synomodel} redpill-dtb-static
 
             if [ -n ${{ steps.info.outputs.dtb }} ]; then
-              synopform=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')
               dtbuserfile="${{ steps.info.outputs.dtb }}"
               dtbextfile="$(find custom -name model_${synopform}.dtb)"
               echo Copying ${dtbuserfile} to ${dtbextfile} ...
