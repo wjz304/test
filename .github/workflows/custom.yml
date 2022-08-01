@@ -258,20 +258,16 @@ jobs:
                             down = res
                             kind = filetype.guess(down)
                             name = 'ds920p'
-
                             if os.path.exists('extract'):  
                                 shutil.rmtree('extract')
-
                             if kind.extension == 'zip':
                                 import zipfile
                                 z = zipfile.ZipFile(down, 'r')
                                 z.extractall('extract')
-
                             if kind.extension in ['tar', 'gz']:
                                 import tarfile
                                 z = tarfile.open(down) 
                                 z.extractall('extract')
-
                             if os.path.exists('extract'):
                                 isfind = False
                                 for root, dirs, files in os.walk('extract'):
@@ -283,10 +279,11 @@ jobs:
                                             break
                                     if isfind is True:
                                         break
-                            
-                            if down.endswith('dts'):
+                            print('down: {}'.format(down))
+                            if down.endswith('dts') and os.path.exists(down):
                                 wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill-dtb-static/releases/dtc')
                                 if os.path.exists('dtc'):
+                                    print('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                     os.system('sudo chmod a+x dtc')
                                     p = subprocess.Popen('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                                     errinfo = p.stderr.read()
@@ -298,7 +295,7 @@ jobs:
                                 else:
                                     iscustom = 'false'
                                     errinfo = 'dtb parameter error, <dtc tool download error, Please try again later>.'
-
+                            print('down: {}'.format(down))
                             if down.endswith('dtb') and os.path.exists(down) and os.path.getsize(down) > 0:
                                 dtb = down
                             else:
