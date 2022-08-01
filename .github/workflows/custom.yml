@@ -286,7 +286,7 @@ jobs:
                             
                             if down.endswith('dts'):
                                 wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill-dtb-static/releases/dtc')
-                                if os.path.exists(dtc):
+                                if os.path.exists('dtc'):
                                     os.system('sudo chmod a+x dtc')
                                     p = subprocess.Popen('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                                     errinfo = p.stderr.read()
