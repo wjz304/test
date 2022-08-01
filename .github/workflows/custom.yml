@@ -290,7 +290,7 @@ jobs:
                                         print('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         os.system('sudo chmod a+x dtc')
                                         p = subprocess.Popen('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                                        errinfo = p.stderr.read()
+                                        errinfo = p.stderr.read().decode('utf-8')
                                         os.system('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         if os.path.exists('{}.dtb'.format(name)) and os.path.getsize('{}.dtb'.format(name)) > 0:
                                             down = '{}.dtb'.format(name)
