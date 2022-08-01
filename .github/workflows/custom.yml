@@ -285,8 +285,10 @@ jobs:
                                         break
                             
                             if down.endswith('dts'):
-                                wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill-dtb-static/releases/dtc')
-                                os.system('sudo ./dtc -q -I dts -O dtb {}.dts >{}.dtb'.format(name, name))
+                                dtc = wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/redpill-dtb-static/releases/dtc')
+                                print('dtc: {}'.format(dtc))
+                                os.system('sudo chmod a+x ./dtc)
+                                os.system('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                 if os.path.exists('{}.dtb'.format(name)) and os.path.getsize('{}.dtb'.format(name)) > 0:
                                     down = '{}.dtb'.format(name)
                                 else:
