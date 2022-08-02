@@ -12,63 +12,30 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
-  
+
+
 jobs:
-  initjob:
-    name: Initialization
+  build:
     runs-on: ubuntu-latest
-    
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          #  定时定制 1
-          - platform: DS3622xs+
-            version: 7.0.1-42218
-            map: ''
-            dtb: ''
-            sn:  ''
-            mac: ''
-            usb: ''
-            ext: r8125, igb, bnx2, r8169, sky2, tg3, vmxnet3, e1000, e1000e
-            exp: pocopico
-            jun: 1
-
-          #  定时定制 2
-          - platform: DS3622xs+
-            version: 7.1.0-42661
-            map: ''
-            dtb: ''
-            sn:  ''
-            mac: ''
-            usb: 0x0001, 0x46f4
-            ext: r8125, igb, bnx2, r8169, sky2, tg3, vmxnet3, e1000, e1000e
-            exp: pocopico
-            jun: 0
-
-          # 更多 请安以上格式添加
     steps:
       - name: Checkout
         uses: actions/checkout@main
-        
-      - name: Init releasetag
-        id: initenv
-        run: |
-          sudo timedatectl set-timezone "Asia/Shanghai"
-          echo "::set-output name=releasetag::$(date +"%Y.%m.%d-%H%M")"
-          echo releasetag: ${{ steps.initenv.outputs.releasetag }}
 
-      - name: Build ${{ matrix.platform }} ${{ matrix.version }}
+      - name: Find schedule issues
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'find-issues'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title-includes: 'schedule'
+          label-includes: 'schedule'
+
+
+      - name: Loop on issues
+        uses: actions-cool/issues-helper@v3
         uses: ./.github/workflows/custom.yml
         with:
-  #      releasetag: ${{ outputs.releasetag }}
-          platform: ${{ matrix.platform }}
-          version: ${{ matrix.version }}
-          map: ${{ matrix.map }}
-          dtb: ${{ matrix.dtb }}
-          sn:  ${{ matrix.sn }}
-          mac: ${{ matrix.mac }}
-          usb: ${{ matrix.usb }}
-          ext: ${{ matrix.ext }}
-          exp: ${{ matrix.exp }}
-          jun: ${{ matrix.jun }}
+          issuenumber: ${{ fromJson(steps.findissueid.outputs.issues)[0].number }}
+          issueuser: ${{ fromJson(steps.findissueid.outputs.issues)[0].auth }}
+          issuetitle: ${{ fromJson(steps.findissueid.outputs.issues)[0].title }}
+          issuebody: ${{ fromJson(steps.findissueid.outputs.issues)[0].body }}
+

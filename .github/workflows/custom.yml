@@ -90,46 +90,18 @@ on:
 
   workflow_call:
     inputs:
-      platform:
+      issuenumber:
         required: true
         type: string
-
-      version:
+      issueuser:
         required: true
         type: string
-
-      map: 
+      issuetitle:
         required: true
         type: string
-
-      dtb: 
+      issuebody:
         required: true
         type: string
-
-      sn:
-        required: true
-        type: string
-
-      mac: 
-        required: true
-        type: string
-
-      usb: 
-        required: true
-        type: string
-
-      ext:
-        required: true
-        type: string
-      
-      exp: 
-        required: true
-        type: string
-
-      jun:
-        required: true
-        type: string
-        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -157,14 +129,22 @@ jobs:
       - name: Get Issues
         if: github.event_name == 'issues'
         run: |
+          issuenumber=${{ github.event.issue.number }}
+          issueuser=${{ github.event.issue.user.login }}
           issuetitle=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ github.event.issue.title }}')
-          issuebodys=$(echo '${{ github.event.issue.body }}' | tr '\r' ' ' | tr '\n' ' ')
+          issuebody=$(echo '${{ github.event.issue.body }}' | tr '\r' ' ' | tr '\n' ' ')
 
+          echo ${issuenumber}
+          echo ${issueuser}
           echo ${issuetitle}
-          echo ${issuebodys}
+          echo ${issuebody}
 
+          echo "issuenumber=${issuenumber}" >> $GITHUB_ENV
+          echo "issueuser=${issueuser}" >> $GITHUB_ENV
           echo "issuetitle=${issuetitle}" >> $GITHUB_ENV
-          echo "issuebodys=${issuebodys}" >> $GITHUB_ENV
+          echo "issuebody=${issuebody}" >> $GITHUB_ENV
+
+          echo ${{ fromJson(github.event.issue.body) }}
 
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
@@ -198,7 +178,7 @@ jobs:
 
                         body = {}
                         try:
-                            body = json.loads('${{ env.issuebodys }}')
+                            body = json.loads('${{ env.issuebody }}')
                             if len(body) == 0:
                                 iscustom = 'false'
                                 errinfo = 'body error, body is null'
@@ -397,7 +377,7 @@ jobs:
         with:
           actions: 'add-labels'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
           labels: 'custom'
 
       - name: Create comment
@@ -406,13 +386,13 @@ jobs:
         with:
           actions: 'create-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ github.event.issue.user.login }} 您好.
+            ${{ env.issueuser }} 您好.
             您自定义的 Redpill 已开始构建。请前往下面的 URL 查看详细信息。
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ----
-            Hi ${{ github.event.issue.user.login }}. 
+            Hi ${{ env.issueuser }}. 
             Your customized Redpill has started building. Please click the URL below to view the details.
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: heart
@@ -423,14 +403,14 @@ jobs:
         with:
           actions: 'create-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ github.event.issue.user.login }} 您好.
+            ${{ env.issueuser }} 您好.
             您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  
             error info: ${{ steps.info.outputs.errinfo }}
             > 
             ----
-            Hi ${{ github.event.issue.user.login }}. 
+            Hi ${{ env.issueuser }}. 
             The information filled in by your customized Redpill cannot be parsed. Please refer to the template and restart customization.
             error info: ${{ steps.info.outputs.errinfo }}
             > 
@@ -453,11 +433,7 @@ jobs:
                     },
                     "synoinfo": {
                         "internalportcfg": "0xffff",
-                        "maxlanport": "7",
-                        "maxdisks": "9",
-                        "support_bde_internal_10g": "no",
-                        "support_disk_compatibility": "no",
-                        "support_memory_compatibility": "no"
+                        "maxlanport": "7"
                     },
                     "ramdisk_copy": {}
                 }
@@ -501,12 +477,6 @@ jobs:
                     if len(usbs) == 2:
                         config["extra_cmdline"]["pid"] = usbs[0]
                         config["extra_cmdline"]["vid"] = usbs[1]
-
-                if '${{ steps.info.outputs.platform }}' in ['DS918+', 'DS920+']:
-                    config["synoinfo"]["maxdisks"] = "9"
-
-                if '${{ steps.info.outputs.platform }}' in ['DS3615xs', 'DS3617xs', 'DS3622xs+']:
-                    config["synoinfo"]["maxdisks"] = "36"
 
                 print(json.dumps(config, indent=4))
 
@@ -632,9 +602,9 @@ jobs:
         if: steps.info.outputs.iscustom == 'true' && success()
         id: tag
         run: |
-          echo "### Redpill Custom By ${{ github.event.issue.user.login }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Redpill Custom By ${{ env.issueuser }}" >> $GITHUB_STEP_SUMMARY
           if [ ${{ steps.info.outputs.issues }} == 'true' ]; then
-            echo "👉 issues: [#${{ github.event.issue.number }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }})" >> $GITHUB_STEP_SUMMARY
+            echo "👉 issues: [#${{ env.issuenumber }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ env.issuenumber }})" >> $GITHUB_STEP_SUMMARY
           else
             echo "👉 "platform": "${{ steps.info.outputs.platform }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
@@ -659,13 +629,13 @@ jobs:
         with:
           actions: 'create-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ github.event.issue.user.login }} 您好.
+            ${{ env.issueuser }} 您好.
             您自定义的 Redpill 已构建完成。请前往下面的 URL 下载。
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
-            Hi ${{ github.event.issue.user.login }}. 
+            Hi ${{ env.issueuser }}. 
             Your customized Redpill has been builded. Please click the URL below to download it.
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: hooray
@@ -676,7 +646,7 @@ jobs:
         with:
           actions: 'close-issue'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
 
       - name: Create comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true' && failure()
@@ -684,13 +654,13 @@ jobs:
         with:
           actions: 'create-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ github.event.issue.user.login }} 您好.
+            ${{ env.issueuser }} 您好.
             您自定义的 Redpill 构建失败。请前往下面的 URL 查看详细信息。请自行关闭本 Issues 并在进行调整后重新创建一个 Issues 来发起重新构建。
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
-            Hi ${{ github.event.issue.user.login }}. 
+            Hi ${{ env.issueuser }}. 
             Your customized Redpill build failed. Please click the URL below to view the details. Please close this issue by yourself and re create an issue after adjustment to initiate the rebuild.
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: hooray
