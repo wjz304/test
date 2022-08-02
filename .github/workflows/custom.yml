@@ -132,8 +132,8 @@ jobs:
           issuenumber=${{ github.event.issue.number }}
           issueauth=${{ github.event.issue.user.login }}
           issuetitle=$(sed -E 's/[[:space:]|[:punct:]]/_/g' <<<'${{ github.event.issue.title }}')
-          issuebody=$(echo '${{ github.event.issue.body }}' | tr '\r' ' ' | tr '\n' ' ')
-
+          # issuebody=$(echo '${{ github.event.issue.body }}' | tr '\r' ' ' | tr '\n' ' ')
+          issuebody=${{ toJSON(github.event.issue.body) }}
           echo ${issuenumber}
           echo ${issueauth}
           echo ${issuetitle}
@@ -144,6 +144,7 @@ jobs:
           echo "issuetitle=${issuetitle}" >> $GITHUB_ENV
           echo "issuebody=${issuebody}" >> $GITHUB_ENV
 
+          
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
         id: info
