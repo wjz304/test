@@ -27,14 +27,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-state: 'open, closed'
           title-includes: 'custom, Custom'
-#          labels: 'schedule'
+          label-includes: 'schedule'
 
       - name: Generate build matrix
         id: set-matrix
         uses: actions/github-script@v6
         with:
           script: |
-            core.setOutput("matrix",JSON.stringify(${{ steps.findissueid.outputs.issues }}));
+            let matrix = {${{ steps.findissueid.outputs.issues }}};
+            core.setOutput("matrix",JSON.stringify(matrix));
 
 
   build:
