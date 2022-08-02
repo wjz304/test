@@ -15,26 +15,38 @@ on:
 
 
 jobs:
-  build:
+  matrix:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
-
       - name: Find schedule issues
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'find-issues'
           token: ${{ secrets.GITHUB_TOKEN }}
-          title-includes: 'custom'
+          issue-state: 'open, closed'
+          title-includes: 'custom, Custom'
           label-includes: 'schedule'
 
+      - name: Generate build matrix
+        id: set-matrix
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setOutput("matrix",JSON.stringify(steps.findissueid.outputs.issues));
 
+
+  build:
+    needs: matrix
+    strategy:
+      matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
+    steps:
       - name: Loop on issues
         uses: ./.github/workflows/custom.yml
         with:
-          issuenumber: ${{ fromJson(steps.findissueid.outputs.issues)[0].number }}
-          issueuser: ${{ fromJson(steps.findissueid.outputs.issues)[0].auth }}
-          issuetitle: ${{ fromJson(steps.findissueid.outputs.issues)[0].title }}
-          issuebody: ${{ fromJson(steps.findissueid.outputs.issues)[0].body }}
+          issuenumber: ${{ matrix.number }}
+          issueauth: ${{ matrix.auth }}
+          issuetitle: ${{ matrix.title }}
+          issuebody: ${{ matrix.body }}
 
