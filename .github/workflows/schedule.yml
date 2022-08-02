@@ -68,9 +68,9 @@ jobs:
       #    issuetitle: ${{ matrix.issues.title }}
       #    issuebody: ${{ matrix.issues.body }}
 
-      name: Open issue
-      uses: actions-cool/issues-helper@v3
-      with:
-        actions: 'open-issue'
-        token: ${{ secrets.GITHUB_TOKEN }}
-        issue-number: ${{ matrix.issues.number }}  
+      - name: Open issue
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'open-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ matrix.issues.number }}  
