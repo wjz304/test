@@ -57,7 +57,7 @@ jobs:
           echo "issuebody:  ${{ matrix.issues.body }}"
         
       - name: Loop on issues
-        uses: ./.github/workflows/custom.yml@main
+        uses: ./.github/workflows/custom.yml
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
