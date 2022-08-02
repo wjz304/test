@@ -602,7 +602,12 @@ jobs:
         if: steps.info.outputs.iscustom == 'true' && success()
         id: tag
         run: |
-          echo "### Redpill Custom By ${{ env.issueauth }}" >> $GITHUB_STEP_SUMMARY
+          echo "```  " >> $GITHUB_STEP_SUMMARY
+          echo "╦═╗┌─┐┌┬┐┌─┐┬┬  ┬    ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐╔╗ ┬ ┬┬┬  ┌┬┐  " >> $GITHUB_STEP_SUMMARY
+          echo "╠╦╝├┤  ││├─┘││  │    ║  │ │└─┐ │ │ ││││╠╩╗│ │││   ││  " >> $GITHUB_STEP_SUMMARY
+          echo "╩╚═└─┘─┴┘┴  ┴┴─┘┴─┘  ╚═╝└─┘└─┘ ┴ └─┘┴ ┴╚═╝└─┘┴┴─┘─┴┘  " >> $GITHUB_STEP_SUMMARY
+          echo "```  " >> $GITHUB_STEP_SUMMARY
+          echo "### ${{ env.issueauth }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           if [ ${{ steps.info.outputs.issues }} == 'true' ]; then
             echo "👉 issues: [#${{ env.issuenumber }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ env.issuenumber }})" >> $GITHUB_STEP_SUMMARY
           else
