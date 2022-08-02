@@ -25,8 +25,8 @@ jobs:
         with:
           actions: 'find-issues'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-state: 'open, closed'
-          title-includes: 'custom, Custom'
+#          issue-state: 'open'
+          title-includes: 'custom'
           label-includes: 'schedule'
 
       - name: Generate build matrix
