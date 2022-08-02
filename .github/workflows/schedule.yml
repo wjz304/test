@@ -36,9 +36,7 @@ jobs:
         with:
           script: |
             let matrix = {};
-            if ("${{ steps.find-issues.outputs.issues }}".length > 0) {
-                matrix.issues = ${{ steps.find-issues.outputs.issues }};
-            }
+            matrix.issues = ${{ steps.find-issues.outputs.issues }};
             core.setOutput("matrix",JSON.stringify(matrix));
 
 
