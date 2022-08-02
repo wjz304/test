@@ -55,12 +55,22 @@ jobs:
           echo "issueauth:  ${{ matrix.issues.auth }}"
           echo "issuetitle: ${{ matrix.issues.title }}"
           echo "issuebody:  ${{ matrix.issues.body }}"
-        
-      - name: Loop on issues
-        uses: ./../.github/workflows/custom.yml
-        with:
-          issuenumber: ${{ matrix.issues.number }}
-          issueauth: ${{ matrix.issues.auth }}
-          issuetitle: ${{ matrix.issues.title }}
-          issuebody: ${{ matrix.issues.body }}
+      
+      # error: 
+      #    Can't find 'action.yml', 'action.yaml' or 'Dockerfile' under '/home/runner/work/test/.github/workflows/custom.yml'. 
+      #    Did you forget to run actions/checkout before running your local action?
+      #
+      #- name: Loop on issues
+      #  uses: ./../.github/workflows/custom.yml
+      #  with:
+      #    issuenumber: ${{ matrix.issues.number }}
+      #    issueauth: ${{ matrix.issues.auth }}
+      #    issuetitle: ${{ matrix.issues.title }}
+      #    issuebody: ${{ matrix.issues.body }}
 
+      name: Open issue
+      uses: actions-cool/issues-helper@v3
+      with:
+        actions: 'open-issue'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ matrix.issues.number }}  
