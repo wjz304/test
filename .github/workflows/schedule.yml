@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
-      - name: Loop on issues
+      - name: Echo issues Info
         run: |
           echo "number:     ${{ matrix.issues.number }}"
           echo "issueauth:  ${{ matrix.issues.auth }}"
@@ -57,7 +57,7 @@ jobs:
           echo "issuebody:  ${{ matrix.issues.body }}"
         
       - name: Loop on issues
-        uses: wjz304/test/.github/workflows/custom.yml@master
+        uses: ../.github/workflows/custom.yml
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
