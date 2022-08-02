@@ -77,20 +77,11 @@ jobs:
       #    state: 'reopened'
           
           
-      - name: Generate build matrix
-        id: set-matrix
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const octokit = new Octokit({
-              auth: '${{ secrets.GITHUB_TOKEN }}'
-            })
-
-            await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
-              owner: 'wjz304',
-              repo: 'test',
-              issue_number: '${{ matrix.issues.number }}',
-              assignees: ['wjz304'],
-              milestone: 1,
-              state: 'open'
-            })
+      - name: Open issue
+        run: |
+          curl \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \ 
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ matrix.issues.number }} \
+            -d '{"state":"open"}'
