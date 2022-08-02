@@ -51,14 +51,13 @@ jobs:
 
       - name: Echo issues Info
         run: |
-          git clone "https://github.com/$GITHUB_REPOSITORY"
           echo "number:     ${{ matrix.issues.number }}"
           echo "issueauth:  ${{ matrix.issues.auth }}"
           echo "issuetitle: ${{ matrix.issues.title }}"
           echo "issuebody:  ${{ matrix.issues.body }}"
         
       - name: Loop on issues
-        uses: ./.github/workflows/custom.yml
+        uses: ./../.github/workflows/custom.yml
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
