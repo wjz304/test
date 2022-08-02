@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-state: 'all'
           #title-includes: 'custom'
-          label-includes: 'schedule'
+          labels: 'schedule'
 
       - name: Generate build matrix
         id: set-matrix
