@@ -35,7 +35,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let matrix = {${{ steps.find-issues.outputs.issues }}};
+            let matrix = ${{ steps.find-issues.outputs.issues }};
             core.setOutput("matrix",JSON.stringify(matrix));
 
 
