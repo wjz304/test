@@ -41,7 +41,7 @@ on:
         type: string
 
       dtb:
-        description: '暂不可用, 待实现'
+        description: 'URL of dtb file(support ext: .dts,.dtb,.tar.gz,.zip)'
         required: false
         default: ''
         type: string
@@ -462,18 +462,6 @@ jobs:
                     "ramdisk_copy": {}
                 }
 
-                if '${{ steps.info.outputs.map }}' != '':
-                    maps = '${{ steps.info.outputs.map }}'.split(',')
-                    if len(maps) == 2:
-                        config["extra_cmdline"]["SataPortMap"] = maps[0]
-                        config["extra_cmdline"]["DiskIdxMap"] = maps[1]
-                  
-                if '${{ steps.info.outputs.usb }}' != '':
-                    usbs = '${{ steps.info.outputs.usb }}'.split(',')
-                    if len(usbs) == 2:
-                        config["extra_cmdline"]["pid"] = usbs[0]
-                        config["extra_cmdline"]["vid"] = usbs[1]
-
                 dat = []
                 if '${{ steps.info.outputs.sn }}' == '' or '${{ steps.info.outputs.mac }}' == '':
                     try:
@@ -486,7 +474,7 @@ jobs:
                     os.system('sed -i "s|echo.*\$(generateMacAddress)|echo \$(generateMacAddress)|g" serialnumbergen.sh')
                     os.system('sed -i "s|echo.*\$(generateSerial \$1)|echo \$(generateSerial \$1)|g" serialnumbergen.sh')
                     dat = os.popen('bash ./serialnumbergen.sh ${{ steps.info.outputs.platform }}').readlines()
-                
+
                 if '${{ steps.info.outputs.sn }}' != '':
                     config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.sn }}'
                 elif len(dat) == 2:
@@ -501,7 +489,19 @@ jobs:
                     config["extra_cmdline"]["mac1"] = dat[0].strip().replace(':', '')
                     config["extra_cmdline"]["mac2"] = hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0').upper()
                     config["extra_cmdline"]["netif_num"] = 2
-                
+
+                if '${{ steps.info.outputs.map }}' != '':
+                    maps = '${{ steps.info.outputs.map }}'.split(',')
+                    if len(maps) == 2:
+                        config["extra_cmdline"]["SataPortMap"] = maps[0]
+                        config["extra_cmdline"]["DiskIdxMap"] = maps[1]
+
+                if '${{ steps.info.outputs.usb }}' != '':
+                    usbs = '${{ steps.info.outputs.usb }}'.split(',')
+                    if len(usbs) == 2:
+                        config["extra_cmdline"]["pid"] = usbs[0]
+                        config["extra_cmdline"]["vid"] = usbs[1]
+
                 if '${{ steps.info.outputs.platform }}' in ['DS918+', 'DS920+']:
                     config["synoinfo"]["maxdisks"] = "9"
 
