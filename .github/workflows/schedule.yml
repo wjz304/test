@@ -68,10 +68,29 @@ jobs:
       #    issuetitle: ${{ matrix.issues.title }}
       #    issuebody: ${{ matrix.issues.body }}
 
-      - name: Open issue
-        uses: actions-cool/issues-helper@v3
+      #- name: Open issue
+      #  uses: actions-cool/issues-helper@v3
+      #  with:
+      #    actions: 'update-issue'
+      #    token: ${{ secrets.GITHUB_TOKEN }}
+      #    issue-number: ${{ matrix.issues.number }}
+      #    state: 'reopened'
+          
+          
+      - name: Generate build matrix
+        id: set-matrix
+        uses: actions/github-script@v6
         with:
-          actions: 'update-issue'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ matrix.issues.number }}
-          state: 'reopened'
+          script: |
+            const octokit = new Octokit({
+              auth: '${{ secrets.GITHUB_TOKEN }}'
+            })
+
+            await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+              owner: 'wjz304',
+              repo: 'test',
+              issue_number: '${{ matrix.issues.number }}',
+              assignees: ['wjz304'],
+              milestone: 1,
+              state: 'open'
+            })
