@@ -21,6 +21,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Find schedule issues
+        id: find-issues
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'find-issues'
@@ -34,9 +35,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let matrix = ${{ fromJson(steps.findissueid.outputs.issues) }};
+            let matrix = {${{ steps.find-issues.outputs.issues }}};
             core.setOutput("matrix",JSON.stringify(matrix));
-            console.log(JSON.stringify(matrix, null, 4))
 
 
   build:
