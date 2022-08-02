@@ -34,7 +34,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let matrix = {"issues": ${{ steps.findissueid.outputs.issues }}};
+            let matrix = ${{ fromJson(steps.findissueid.outputs.issues) }};
             core.setOutput("matrix",JSON.stringify(matrix));
             console.log(JSON.stringify(matrix, null, 4))
 
@@ -47,16 +47,16 @@ jobs:
     steps:
       - name: Loop on issues
         run: |
-          echo "number:     ${{ matrix.issues.number }}"
-          echo "issueauth:  ${{ matrix.issues.auth }}"
-          echo "issuetitle: ${{ matrix.issues.title }}"
-          echo "issuebody:  ${{ matrix.issues.body }}"
+          echo "number:     ${{ matrix.number }}"
+          echo "issueauth:  ${{ matrix.auth }}"
+          echo "issuetitle: ${{ matrix.title }}"
+          echo "issuebody:  ${{ matrix.body }}"
         
       - name: Loop on issues
         uses: ./.github/workflows/custom.yml
         with:
-          issuenumber: ${{ matrix.issues.number }}
-          issueauth: ${{ matrix.issues.auth }}
-          issuetitle: ${{ matrix.issues.title }}
-          issuebody: ${{ matrix.issues.body }}
+          issuenumber: ${{ matrix.number }}
+          issueauth: ${{ matrix.auth }}
+          issuetitle: ${{ matrix.title }}
+          issuebody: ${{ matrix.body }}
 
