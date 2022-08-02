@@ -144,7 +144,12 @@ jobs:
           echo "issuetitle=${issuetitle}" >> $GITHUB_ENV
           echo "issuebody=${issuebody}" >> $GITHUB_ENV
 
-          echo "${{ fromJson(github.event.issue.body) }}"
+      - name: Get Dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          issueauth=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')
+          echo ${issueauth}
+          echo "issueauth=${issueauth}" >> $GITHUB_ENV
 
       - name: Get Info
         uses: jannekem/run-python-script-action@v1.2
@@ -602,12 +607,11 @@ jobs:
         if: steps.info.outputs.iscustom == 'true' && success()
         id: tag
         run: |
-          echo "```  " >> $GITHUB_STEP_SUMMARY
+          echo "### ${{ env.issueauth }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           echo "╦═╗┌─┐┌┬┐┌─┐┬┬  ┬    ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐╔╗ ┬ ┬┬┬  ┌┬┐  " >> $GITHUB_STEP_SUMMARY
           echo "╠╦╝├┤  ││├─┘││  │    ║  │ │└─┐ │ │ ││││╠╩╗│ │││   ││  " >> $GITHUB_STEP_SUMMARY
           echo "╩╚═└─┘─┴┘┴  ┴┴─┘┴─┘  ╚═╝└─┘└─┘ ┴ └─┘┴ ┴╚═╝└─┘┴┴─┘─┴┘  " >> $GITHUB_STEP_SUMMARY
-          echo "```  " >> $GITHUB_STEP_SUMMARY
-          echo "### ${{ env.issueauth }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
+          echo "  " >> $GITHUB_STEP_SUMMARY
           if [ ${{ steps.info.outputs.issues }} == 'true' ]; then
             echo "👉 issues: [#${{ env.issuenumber }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ env.issuenumber }})" >> $GITHUB_STEP_SUMMARY
           else
