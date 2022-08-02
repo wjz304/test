@@ -26,12 +26,11 @@ jobs:
         with:
           actions: 'find-issues'
           token: ${{ secrets.GITHUB_TOKEN }}
-          title-includes: 'schedule'
+          title-includes: 'custom'
           label-includes: 'schedule'
 
 
       - name: Loop on issues
-        uses: actions-cool/issues-helper@v3
         uses: ./.github/workflows/custom.yml
         with:
           issuenumber: ${{ fromJson(steps.findissueid.outputs.issues)[0].number }}
