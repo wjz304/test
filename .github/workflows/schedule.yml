@@ -71,6 +71,7 @@ jobs:
       - name: Open issue
         uses: actions-cool/issues-helper@v3
         with:
-          actions: 'open-issue'
+          actions: 'update-issue'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ matrix.issues.number }}  
+          issue-number: ${{ matrix.issues.number }}
+          state: 'reopened'
