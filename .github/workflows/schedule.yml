@@ -76,12 +76,7 @@ jobs:
       #    issue-number: ${{ matrix.issues.number }}
       #    state: 'reopened'
           
-          
+
       - name: Open issue
         run: |
-          curl \
-            -X PATCH \
-            -H "Accept: application/vnd.github+json" \ 
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ matrix.issues.number }} \
-            -d '{"state":"open"}'
+          curl -X PATCH -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}"  "https://api.github.com/repos/${{ github.repository }}/issues/${{ matrix.issues.number }}" -d '{"state":"open"}'
