@@ -71,7 +71,7 @@ jobs:
                     issues = json.loads('${{ env.issues }}')
 
                     if len(issues) > 0:
-                        data = 'name: Redpill Build (schedule)\non:\n  workflow_call:\n\njobs:\n'
+                        data = 'name: Redpill Build (work)\non:\n  workflow_call:\n\njobs:\n'
 
                         for item in issues:
                             data += '\n  build{}:\n    uses: {}\n    with:\n      issuenumber: "{}"\n      issueauth: "{}"\n      issuetitle: "{}"\n      issuebody: "{}"\n'.format(

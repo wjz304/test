@@ -1,4 +1,4 @@
-name: Redpill Build (schedule)
+name: Redpill Build (work)
 
 on:
   workflow_call:
