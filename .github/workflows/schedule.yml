@@ -48,10 +48,17 @@ jobs:
       matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
+      - name: MultiCheckout
+        uses: vweevers/multi-checkout-action@v1
+        with:
+            token: ${{ secrets.GITHUB_MACHINE_TOKEN }}
+            repositories: |
+              custom
 
       - name: Echo issues Info
         run: |
+          ls -al
           echo "number:     ${{ matrix.issues.number }}"
           echo "issueauth:  ${{ matrix.issues.auth }}"
           echo "issuetitle: ${{ matrix.issues.title }}"
@@ -62,7 +69,7 @@ jobs:
        #   Did you forget to run actions/checkout before running your local action?
       
       - name: Loop on issues
-        uses: ./.github/workflows/custom.yml
+        uses: ../.github/workflows/custom.yml
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
