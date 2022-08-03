@@ -31,7 +31,6 @@ jobs:
           labels: 'schedule'
 
       - name: Get Issues Info
-        if: github.event_name == 'issues'
         id: get-issues
         uses: actions/github-script@v6
         with:
@@ -75,7 +74,7 @@ jobs:
 
                         for item in issues:
                             data += '\n  build{}:\n    uses: {}\n    with:\n      issuenumber: "{}"\n      issueauth: "{}"\n      issuetitle: "{}"\n      issuebody: "{}"\n'.format(
-                              item['number'], './.github/workflows/custom.yml', item['number'], item['auth'], item['title'], item['body']))
+                              item['number'], './.github/workflows/custom.yml', item['number'], item['auth'], item['title'], item['body'])
 
                         with open('./.github/workflows/schedulework.yml', 'w', encoding="utf-8") as f:
                             f.write(data)
