@@ -126,7 +126,7 @@ jobs:
 
           python -m pip install --upgrade pip setuptools
 
-      - name: Get Issues
+      - name: Get Issues Info
         if: github.event_name == 'issues'
         id: get-issues
         uses: actions/github-script@v6
@@ -160,7 +160,7 @@ jobs:
             core.setOutput("issuetitle", JSON.stringify(issuetitle));
             core.setOutput("issuebody", JSON.stringify(issuebody));
 
-      - name: Get Issues
+      - name: Set Issues Info
         if: github.event_name == 'issues' && success()
         run: |
           echo "issuenumber: ${{ steps.get-issues.outputs.issuenumber }}"
@@ -173,7 +173,7 @@ jobs:
           echo "issuetitle=${{ steps.get-issues.outputs.issuetitle }}" >> $GITHUB_ENV
           echo "issuebody=${{ steps.get-issues.outputs.issuebody }}" >> $GITHUB_ENV
 
-      - name: Get Info
+      - name: Get Build Info
         uses: jannekem/run-python-script-action@v1.2
         id: info
         with:
@@ -382,7 +382,7 @@ jobs:
                 set_output('exp', exp)
                 set_output('jun', jun)
 
-      - name: Echo Info
+      - name: Echo Build Info
         run: |
           echo "issues:    ${{ steps.info.outputs.issues }}"
           echo "iscustom:  ${{ steps.info.outputs.iscustom }}"
@@ -398,7 +398,7 @@ jobs:
           echo "exp:       ${{ steps.info.outputs.exp }}"
           echo "jun:       ${{ steps.info.outputs.jun }}"
 
-      - name: Add labels
+      - name: Add Issues labels
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true'
         uses: actions-cool/issues-helper@v3
         with:
@@ -407,7 +407,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           labels: 'custom'
 
-      - name: Create comment
+      - name: Create Issues comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true'
         uses: actions-cool/issues-helper@v3
         with:
@@ -424,7 +424,7 @@ jobs:
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: heart
 
-      - name: Create comment
+      - name: Create Issues comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'false'
         uses: actions-cool/issues-helper@v3
         with:
@@ -443,7 +443,7 @@ jobs:
             > 
           emoji: confused
 
-      - name: config
+      - name: Create Config File
         if: steps.info.outputs.iscustom == 'true'
         uses: jannekem/run-python-script-action@v1.2
         with:
@@ -651,7 +651,7 @@ jobs:
             redpill-load/user_config.json
             redpill-load/images/*.img
 
-      - name: Create comment
+      - name: Create Issues Comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true' && success()
         uses: actions-cool/issues-helper@v3
         with:
@@ -668,7 +668,7 @@ jobs:
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: hooray
 
-      - name: Close issue
+      - name: Close Issues
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true' && success()
         uses: actions-cool/issues-helper@v3
         with:
@@ -676,7 +676,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ env.issuenumber }}
 
-      - name: Create comment
+      - name: Create Issues Comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true' && failure()
         uses: actions-cool/issues-helper@v3
         with:
