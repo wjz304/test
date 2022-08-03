@@ -132,9 +132,9 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let issuenumber = ${{ github.event.issue.number }};
-            let issueauth = ${{ github.event.issue.user.login }};
-            let issuetitle = ${{ github.event.issue.title }};
+            let issuenumber = ${{ toJSON(github.event.issue.number) }};
+            let issueauth = ${{ toJSON(github.event.issue.user.login) }};
+            let issuetitle = ${{ toJSON(github.event.issue.title) }};
             let issuebody = ${{ toJSON(github.event.issue.body) }};
 
             issuetitle = issuetitle.Replace("\u000A", "");  // \n 换行符
