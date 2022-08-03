@@ -51,7 +51,7 @@ jobs:
 
       - name: Echo issues Info
         run: |
-          cp ./../.github/workflows/custom.yml ./../.github/workflows/action.yml 
+          cp ./.github/workflows/custom.yml ./.github/workflows/action.yml 
           echo "number:     ${{ matrix.issues.number }}"
           echo "issueauth:  ${{ matrix.issues.auth }}"
           echo "issuetitle: ${{ matrix.issues.title }}"
