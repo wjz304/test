@@ -49,12 +49,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: MultiCheckout
-        uses: vweevers/multi-checkout-action@v1
-        with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            repositories: |
-              wjz304/test
 
       - name: Echo issues Info
         run: |
@@ -69,7 +63,7 @@ jobs:
        #   Did you forget to run actions/checkout before running your local action?
       
       - name: Loop on issues
-        uses: wjz304/test/custom.yml
+        uses: wjz304/test/.github/workflows/custom.yml@main
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
