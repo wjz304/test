@@ -51,7 +51,7 @@ jobs:
 
       - name: Echo issues Info
         run: |
-          ls -al
+          cp ./../.github/workflows/custom.yml ./../.github/workflows/action.yml 
           echo "number:     ${{ matrix.issues.number }}"
           echo "issueauth:  ${{ matrix.issues.auth }}"
           echo "issuetitle: ${{ matrix.issues.title }}"
@@ -62,7 +62,7 @@ jobs:
        #   Did you forget to run actions/checkout before running your local action?
       
       - name: Loop on issues
-        uses: ./.github/workflows/custom.yml@main
+        uses: ./../.github/workflows
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
