@@ -132,10 +132,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            string issuenumber = ${{ toJSON(github.event.issue.number) }};
-            string issueauth = ${{ toJSON(github.event.issue.user.login) }};
-            string issuetitle = ${{ toJSON(github.event.issue.title) }};
-            string issuebody = ${{ toJSON(github.event.issue.body) }};
+            var issuenumber = ${{ toJSON(github.event.issue.number) }};
+            var issueauth = ${{ toJSON(github.event.issue.user.login) }};
+            var issuetitle = ${{ toJSON(github.event.issue.title) }};
+            var issuebody = ${{ toJSON(github.event.issue.body) }};
 
             issuetitle = issuetitle.Replace("\u000A", "");  // \n 换行符
             issuetitle = issuetitle.Replace("\u000D", "");  // \r 回车
