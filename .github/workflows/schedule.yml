@@ -43,6 +43,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: matrix
+    environment: production
     strategy:
       matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
@@ -67,5 +68,4 @@ jobs:
           issueauth: ${{ matrix.issues.auth }}
           issuetitle: ${{ matrix.issues.title }}
           issuebody: ${{ matrix.issues.body }}
-        secrets:
-          envPAT: ${{ secrets.envPAT }}
+
