@@ -102,6 +102,9 @@ on:
       issuebody:
         required: true
         type: string
+    secrets:
+      envPAT:
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
