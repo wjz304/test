@@ -137,9 +137,11 @@ jobs:
             var issuetitle = ${{ toJSON(github.event.issue.title) }};
             var issuebody = ${{ toJSON(github.event.issue.body) }};
 
+            issuetitle = issuetitle.toString();
             issuetitle = issuetitle.Replace("\u000A", "");  // \n 换行符
             issuetitle = issuetitle.Replace("\u000D", "");  // \r 回车
 
+            issuebody = issuebody.toString();
             issuebody = issuebody.Replace("\u0008", "");  // \b Backspace
             issuebody = issuebody.Replace("\u0009", "");  // \t Tab
             issuebody = issuebody.Replace("\u000A", "");  // \n 换行符
