@@ -30,42 +30,60 @@ jobs:
           #title-includes: 'custom'
           labels: 'schedule'
 
-      - name: Generate build matrix
-        id: set-matrix
+      - name: Get Issues Info
+        if: github.event_name == 'issues'
+        id: get-issues
         uses: actions/github-script@v6
         with:
           script: |
-            let matrix = {};
-            matrix.issues = ${{ steps.find-issues.outputs.issues }};
-            core.setOutput("matrix",JSON.stringify(matrix));
+            var issues = ${{ toJSON(steps.find-issues.outputs.issues) }};
 
+            // '<???>': 替换一次; '/<???>/g': 替换全局; '/<???>/gi': 替换全局并忽略大小写; 
+            issues = issuebody.replace(/\u0008/g, "");  // \b Backspace
+            issues = issuebody.replace(/\u0009/g, "");  // \t Tab
+            issues = issuebody.replace(/\u000A/g, "");  // \n 换行符
+            issues = issuebody.replace(/\u000B/g, "");  // \v 垂直制表符
+            issues = issuebody.replace(/\u000C/g, "");  // \f 换页
+            issues = issuebody.replace(/\u000D/g, "");  // \r 回车
+            //issues = issuebody.replace(/\u0022/g, "");  // \" 双引号 (")
+            //issues = issuebody.replace(/\u0027/g, "");  // \' 单引号 (')
+            //issues = issuebody.replace(/\u005C/g, "");  // \\ 反斜杠 (\)
+            issues = issuebody.replace(/\u00A0/g, "");  //    不间断空格
+            issues = issuebody.replace(/\u2028/g, "");  //    行分隔符
+            issues = issuebody.replace(/\u2029/g, "");  //    段落分隔符
+            issues = issuebody.replace(/\uFEFF/g, "");  //    字节顺序标记
+
+            core.setOutput("issues", JSON.stringify(issues));
+
+      - name: make yml
+        uses: jannekem/run-python-script-action@v1.2
+        id: info
+        with:
+          script: |
+            import os, re, json, shutil, string, subprocess
+
+            if __name__ == '__main__':
+
+                issues = {}
+                data = ''
+
+                try:
+                    issues = json.loads('${{ env.issues }}')
+
+                    if len(issues) > 0:
+                        data = 'name: Redpill Build (schedule)\non:\n  workflow_call:\n\njobs:\n'
+
+                        for item in issues:
+                            data += '\n  build{}:\n    uses: {}\n    with:\n      issuenumber: "{}"\n      issueauth: "{}"\n      issuetitle: "{}"\n      issuebody: "{}"\n'.format(
+                              item['number'], './.github/workflows/custom.yml', item['number'], item['auth'], item['title'], item['body']))
+
+                        with open('workflow.yml', 'w', encoding="utf-8") as f:
+                            f.write(data)
+
+                    print(data)
+                except Exception as err:
+                    print(err)
 
   build:
-    runs-on: ubuntu-latest
     needs: matrix
-    strategy:
-      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Echo issues Info
-        run: |
-          cp ./.github/workflows/custom.yml ./.github/workflows/action.yml 
-          echo "number:     ${{ matrix.issues.number }}"
-          echo "issueauth:  ${{ matrix.issues.auth }}"
-          echo "issuetitle: ${{ matrix.issues.title }}"
-          echo "issuebody:  ${{ matrix.issues.body }}"
-      
-       #error: 
-       #   Can't find 'action.yml', 'action.yaml' or 'Dockerfile' under '/home/runner/work/test/.github/workflows/custom.yml'. 
-       #   Did you forget to run actions/checkout before running your local action?
-      
-      - name: Loop on issues
-        uses: wjz304/test@main
-        with:
-          issuenumber: ${{ matrix.issues.number }}
-          issueauth: ${{ matrix.issues.auth }}
-          issuetitle: ${{ matrix.issues.title }}
-          issuebody: ${{ matrix.issues.body }}
-
+    uses: ./workflow.yml
