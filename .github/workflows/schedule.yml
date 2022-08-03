@@ -54,7 +54,7 @@ jobs:
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             repositories: |
-              test/custom
+              wjz304/test
 
       - name: Echo issues Info
         run: |
