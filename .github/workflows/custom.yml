@@ -154,10 +154,10 @@ jobs:
             issuebody = issuebody.replace("\u2029", "");  //    段落分隔符
             issuebody = issuebody.replace("\uFEFF", "");  //    字节顺序标记
 
-            core.setOutput("issuenumber", issuenumber);
-            core.setOutput("issueauth", issueauth);
-            core.setOutput("issuetitle", issuetitle);
-            core.setOutput("issuebody", issuebody);
+            core.setOutput("issuenumber", JSON.stringify(issuenumber));
+            core.setOutput("issueauth", JSON.stringify(issueauth));
+            core.setOutput("issuetitle", JSON.stringify(issuetitle));
+            core.setOutput("issuebody", JSON.stringify(issuebody));
 
       - name: Get Issues
         if: github.event_name == 'issues' && success()
