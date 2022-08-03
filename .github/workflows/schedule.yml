@@ -69,7 +69,7 @@ jobs:
        #   Did you forget to run actions/checkout before running your local action?
       
       - name: Loop on issues
-        uses: ./../.github/workflows/custom.yml
+        uses: wjz304/test/custom.yml
         with:
           issuenumber: ${{ matrix.issues.number }}
           issueauth: ${{ matrix.issues.auth }}
