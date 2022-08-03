@@ -54,7 +54,7 @@ jobs:
         with:
             token: ${{ secrets.GITHUB_MACHINE_TOKEN }}
             repositories: |
-              custom
+              test/custom
 
       - name: Echo issues Info
         run: |
