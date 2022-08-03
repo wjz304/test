@@ -1,0 +1,7 @@
+
+
+name: Redpill Build (schedule)
+on:
+  workflow_call:
+
+jobs:
