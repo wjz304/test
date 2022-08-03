@@ -20,6 +20,9 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
       - name: Find schedule issues
         id: find-issues
         uses: actions-cool/issues-helper@v3
@@ -76,7 +79,7 @@ jobs:
                             data += '\n  build{}:\n    uses: {}\n    with:\n      issuenumber: "{}"\n      issueauth: "{}"\n      issuetitle: "{}"\n      issuebody: "{}"\n'.format(
                               item['number'], './.github/workflows/custom.yml', item['number'], item['auth'], item['title'], item['body'])
 
-                        with open('../.github/workflows/schedulework.yml', 'w', encoding="utf-8") as f:
+                        with open('./.github/workflows/schedulework.yml', 'w', encoding="utf-8") as f:
                             f.write(data)
 
                     print(data)
