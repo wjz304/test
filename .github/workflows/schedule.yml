@@ -67,7 +67,7 @@ jobs:
                 data = ''
 
                 try:
-                    issues = json.loads('${{ steps.get-issues.outputs.issues }}')
+                    issues = json.loads(${{ steps.get-issues.outputs.issuenumber }})
 
                     if len(issues) > 0:
                         data = 'name: Redpill Build (work)\non:\n  workflow_call:\n\njobs:\n'
