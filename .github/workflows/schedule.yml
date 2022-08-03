@@ -52,7 +52,7 @@ jobs:
       - name: MultiCheckout
         uses: vweevers/multi-checkout-action@v1
         with:
-            token: ${{ secrets.GITHUB_MACHINE_TOKEN }}
+            token: ${{ secrets.GITHUB_TOKEN }}
             repositories: |
               test/custom
 
