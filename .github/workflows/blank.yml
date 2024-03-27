@@ -46,3 +46,33 @@ jobs:
           from: ${{secrets.MAIL_USERNAME}}
           body: A new commit has been pushed to master.
           attachments: DSM_FS6400_69057.pat
+
+      - name: test
+        run: |
+          echo 1 >1.txt
+          echo 2 >2.txt
+          echo 3 >3.txt
+
+      - name: test1
+        uses: actions/upload-artifact@v4
+        with:
+          name: modules
+          path: |
+            1.txt
+          overwrite: true
+
+      - name: test2
+        uses: actions/upload-artifact@v4
+        with:
+          name: modules
+          path: |
+            2.txt
+          overwrite: true
+
+      - name: test3
+        uses: actions/upload-artifact@v4
+        with:
+          name: modules
+          path: |
+            3.txt
+          overwrite: true
