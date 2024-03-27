@@ -32,7 +32,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          curl -kL https://global.synologydownload.com/download/DSM/release/7.2.1/69057-4/DSM_FS6400_69057.pat -o DSM_FS6400_69057.pat
+          # curl -kL https://global.synologydownload.com/download/DSM/release/7.2.1/69057-4/DSM_FS6400_69057.pat -o DSM_FS6400_69057.pat
+          echo https://global.synologydownload.com/download/DSM/release/7.2.1/69057-4/DSM_FS6400_69057.pat >url.txt
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
@@ -45,7 +46,7 @@ jobs:
           to: wjz304@qq.com
           from: ${{secrets.MAIL_USERNAME}}
           body: A new commit has been pushed to master.
-          attachments: DSM_FS6400_69057.pat
+          attachments: url.txt
 
       - name: test
         run: |
