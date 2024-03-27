@@ -22,6 +22,20 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Dump GitHub context
+        id: github_context_step
+        run: echo '${{ toJSON(github) }}'
+      - name: Dump job context
+        run: echo '${{ toJSON(job) }}'
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
+      - name: Dump runner context
+        run: echo '${{ toJSON(runner) }}'
+      - name: Dump strategy context
+        run: echo '${{ toJSON(strategy) }}'
+      - name: Dump matrix context
+        run: echo '${{ toJSON(matrix) }}'
+    
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
@@ -57,23 +71,34 @@ jobs:
       - name: test1
         uses: actions/upload-artifact@v4
         with:
-          name: modules
+          name: modules1
           path: |
             1.txt
-          overwrite: true
 
       - name: test2
         uses: actions/upload-artifact@v4
         with:
-          name: modules
+          name: modules2
           path: |
             2.txt
-          overwrite: true
 
       - name: test3
         uses: actions/upload-artifact@v4
         with:
-          name: modules
+          name: modules3
           path: |
             3.txt
-          overwrite: true
+
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
