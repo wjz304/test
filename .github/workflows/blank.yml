@@ -22,6 +22,10 @@ jobs:
           ping -c 1 -W 5 global.download.synology.com || true
           ping -c 1 -W 5 cndl.synology.cn || true
           
+          busybox ping -c 1 -W 5 global.synologydownload.com || true
+          busybox ping -c 1 -W 5 global.download.synology.com || true
+          busybox ping -c 1 -W 5 cndl.synology.cn || true
+          
           mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
             speedlist=""
             if command -v ping >/dev/null 2>&1; then
