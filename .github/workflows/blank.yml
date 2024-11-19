@@ -13,8 +13,12 @@ jobs:
 
       - name: Verify Python version
         run: |
-          sudo apt update
-          sudo apt install -y busybox
+          #sudo apt update
+          #sudo apt install -y busybox
+
+          command -v ping
+          echo $?
+
           
           ping -v || true
           busybox ping -v || true
