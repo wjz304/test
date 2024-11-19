@@ -14,7 +14,7 @@ jobs:
       - name: Verify Python version
         run: |
           mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
-            local speedlist=""
+            speedlist=""
             if command -v ping >/dev/null 2>&1; then
               for I in ${mirrors[@]}; do
                 speed=$(ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
@@ -27,7 +27,7 @@ jobs:
                 speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
               done
             fi
-            local fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
+            fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
             URL="$(echo "${fastest}" | awk '{print $1}')"
             SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
             echo "${URL}"
