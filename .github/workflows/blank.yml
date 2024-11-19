@@ -13,6 +13,10 @@ jobs:
 
       - name: Verify Python version
         run: |
+          ping -c 1 -W 5 global.synologydownload.com
+          ping -c 1 -W 5 global.download.synology.com
+          ping -c 1 -W 5 cndl.synology.cn
+          
           mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
             speedlist=""
             if command -v ping >/dev/null 2>&1; then
