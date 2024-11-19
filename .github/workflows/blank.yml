@@ -15,9 +15,9 @@ jobs:
         run: |
           ping -v || true
           busybox ping -v || true
-          ping -c 1 -W 5 global.synologydownload.com
-          ping -c 1 -W 5 global.download.synology.com
-          ping -c 1 -W 5 cndl.synology.cn
+          ping -c 1 -W 5 global.synologydownload.com || true
+          ping -c 1 -W 5 global.download.synology.com || true
+          ping -c 1 -W 5 cndl.synology.cn || true
           
           mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
             speedlist=""
