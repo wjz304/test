@@ -13,6 +13,8 @@ jobs:
 
       - name: Verify Python version
         run: |
+          ping -v
+          busybox ping -v
           ping -c 1 -W 5 global.synologydownload.com
           ping -c 1 -W 5 global.download.synology.com
           ping -c 1 -W 5 cndl.synology.cn
