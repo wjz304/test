@@ -14,7 +14,7 @@ jobs:
       - name: Verify Python version
         run: |
           sudo apt update
-          sudo apt install -y iputils-ping
+          sudo apt install -y busybox
           
           ping -v || true
           busybox ping -v || true
