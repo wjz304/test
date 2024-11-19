@@ -13,6 +13,9 @@ jobs:
 
       - name: Verify Python version
         run: |
+          sudo apt update
+          sudo apt install -y iputils-ping
+          
           ping -v || true
           busybox ping -v || true
           ping -c 1 -W 5 global.synologydownload.com || true
