@@ -1,6 +1,7 @@
 name: Python CI
 
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -10,13 +11,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      #- name: Set up Python
-      #- uses: actions/setup-python@v5
-      #  with:
-      #    python-version: '3.11' 
-
       - name: Verify Python version
         run: |
-          python --version
-          python3 --version
 
+          function _get_fastest() {
+            local speedlist=""
+            if command -v ping >/dev/null 2>&1; then
+              for I in "$@"; do
+                speed=$(ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
+                speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
+              done
+            else
+              for I in "$@"; do
+                speed=$(curl -o /dev/null -s -w '%{time_total}' "${I}")
+                speed=$(awk "BEGIN {print (${speed:-0.999} * 1000)}")
+                speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
+              done
+            fi
+            local fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
+            URL="$(echo "${fastest}" | awk '{print $1}')"
+            SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
+            echo "${URL}"
+            [ $(echo "${SPD:-999}" | cut -d. -f1) -ge 999 ] && return 1 || return 0
+          }
+
+          mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+          _get_fastest ${mirrors[@]}
+          if [ $? -ne 0 ]; then
+            echo "error"
+          fi
