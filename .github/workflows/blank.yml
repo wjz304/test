@@ -33,6 +33,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd /mnt/
-          echo test > test.log
+          echo test | sudo tee -a test.log
           ls -al
           df -h
