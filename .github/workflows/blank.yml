@@ -36,3 +36,4 @@ jobs:
           echo test | sudo tee -a test.log
           ls -al
           df -h
+          cat DATALOSS_WARNING_README.txt
